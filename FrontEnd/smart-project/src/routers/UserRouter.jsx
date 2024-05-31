@@ -7,6 +7,7 @@ import Loader from '@/components/ui/Loader';
 import OTPRequest from '@/pages/User/OTPRequest';
 import VerifyOTP from '@/pages/User/VerifyOTP';
 import ResetPassword from '@/pages/User/ResetPassword';
+import NotFound from '@/components/ui/NotFound';
 
 
 const HomePage = lazy(() => import('../pages/User/Userhome'));
@@ -24,6 +25,8 @@ const UserRouter = () => {
           <Route path="/otp-verify" element={<VerifyOTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
+          
+
           <Route element={<PrivateRoute/>}>
             <Route path="/h" element={<HomePage />} >
                 <Route path="profile" element={<UserProfile />} />
@@ -31,6 +34,8 @@ const UserRouter = () => {
 
             
           </Route>
+
+          <Route path="*" element={<NotFound />} />
           
 
         </Routes>

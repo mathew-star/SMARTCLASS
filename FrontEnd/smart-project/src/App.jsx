@@ -5,6 +5,7 @@ import UserRouter from './routers/UserRouter';
 import AdminRouter from './routers/AdminRouter';
 import useAuthStore from './store/authStore';
 import Loader from './components/ui/Loader';
+import NotFound from './components/ui/NotFound';
 
 
 
@@ -22,8 +23,7 @@ const App = () => {
             <Routes>
                 <Route path="/*" element={<UserRouter />} />
                 <Route path="/admin/*" element={<AdminRouter />} />
-                {/* Redirect to user home page if the route doesn't match */}
-                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
     );

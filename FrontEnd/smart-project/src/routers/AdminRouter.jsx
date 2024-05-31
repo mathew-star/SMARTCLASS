@@ -4,6 +4,7 @@ import Users from '@/pages/Admin/Users';
 import UserProfile from '@/pages/Admin/UserProfile';
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import NotFound from '@/components/ui/NotFound';
 
 const AdminHomePage = lazy(() => import('../pages/Admin/AdminHome'));
 const AdminLogin = lazy(() => import('../pages/Admin/AdminLogin'));
@@ -23,6 +24,8 @@ function AdminRouter() {
 
             
           </Route>
+
+          <Route path="*" element={<NotFound />} />
           
 
         </Routes>
