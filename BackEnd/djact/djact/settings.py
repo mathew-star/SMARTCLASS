@@ -82,10 +82,15 @@ WSGI_APPLICATION = 'djact.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'SmartClass',
+        'USER': 'smartuser',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',  
+        'PORT': '3306',       
     }
 }
+
 
 
 # Password validation
@@ -121,7 +126,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:9000",
-    "http://localhost:5173",  # Remove trailing slash from the URL
+    "http://localhost:5173",
+    "http://localhost:5175",  # Remove trailing slash from the URL
 ]
 
 CORS_ALLOW_ALL_ORIGINS: True
@@ -195,3 +201,11 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "users.UserAccount"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Update with your SMTP host
+EMAIL_PORT = 587  # Update with your SMTP port
+EMAIL_USE_TLS = True  # Use TLS for security
+EMAIL_HOST_USER = 'mjunni99@gmail.com'  # Update with your email
+EMAIL_HOST_PASSWORD = 'bzps pqua eyhm umqz'  # Update with your email password
