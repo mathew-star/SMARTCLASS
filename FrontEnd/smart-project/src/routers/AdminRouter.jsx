@@ -1,5 +1,5 @@
 import AdminPrivateRoute from '@/components/Admin/AdminPrivateRoute';
-import Loader from '@/components/Loader';
+import Loader from '@/components/ui/Loader';
 import Users from '@/pages/Admin/Users';
 import UserProfile from '@/pages/Admin/UserProfile';
 import React, { Suspense, lazy } from 'react';

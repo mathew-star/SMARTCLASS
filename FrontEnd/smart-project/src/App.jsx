@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import UserRouter from './routers/UserRouter';
 import AdminRouter from './routers/AdminRouter';
 import useAuthStore from './store/authStore';
+import Loader from './components/ui/Loader';
 
 
 
@@ -16,6 +17,7 @@ const App = () => {
 
 
     return (
+
         <Router>
             <Routes>
                 <Route path="/*" element={<UserRouter />} />

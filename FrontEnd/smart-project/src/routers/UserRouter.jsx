@@ -3,7 +3,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import UserLayout from '../components/Layout/UserLayout';
 import PrivateRoute from '../components/User/PrivateRoute';
-import Loader from '@/components/Loader';
+import Loader from '@/components/ui/Loader';
 import OTPRequest from '@/pages/User/OTPRequest';
 import VerifyOTP from '@/pages/User/VerifyOTP';
 import ResetPassword from '@/pages/User/ResetPassword';
