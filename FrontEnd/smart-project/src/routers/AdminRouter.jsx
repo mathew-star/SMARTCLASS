@@ -15,7 +15,7 @@ function AdminRouter() {
     <Suspense fallback={<Loader/>}>
         <Routes>
           <Route path="/login" element={<AdminLogin />} />
-
+  
           <Route element={<AdminPrivateRoute/>}>
             <Route path="/home" element={<AdminHomePage />} >
                 <Route path="users" element={<Users />} />

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'users',
+    'Classroom',
 ]
 
 MIDDLEWARE = [
@@ -209,3 +210,6 @@ EMAIL_PORT = 587  # Update with your SMTP port
 EMAIL_USE_TLS = True  # Use TLS for security
 EMAIL_HOST_USER = 'mjunni99@gmail.com'  # Update with your email
 EMAIL_HOST_PASSWORD = 'bzps pqua eyhm umqz'  # Update with your email password
+
+
+FRONTEND_HOST = "http://localhost:5137"
