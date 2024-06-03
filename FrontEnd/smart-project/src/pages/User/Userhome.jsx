@@ -1,57 +1,62 @@
-import React, { useEffect, useMemo } from 'react'
-import UserProfile from './UserProfile'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
-import useAuthStore from '@/store/authStore'
-import Navbar from '@/components/User/Navbar'
-import Sidebar from '@/components/User/HomeSidebar'
-
-
-
+import React, { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import useAuthStore from '@/store/authStore';
+import Navbar from '@/components/User/Navbar';
+import Sidebar from '@/components/User/HomeSidebar';
+import ClassCard from '@/components/User/ClassCard';
+import classApi from '../../api/classroomApi';
+import useClassStore from '../../store/classStore'
 
 
 
 function Userhome() {
-  const navigate = useNavigate()
-  const logout = useAuthStore((state)=>state.logout)
-  const refresh= useAuthStore((state)=>state.refreshAccessToken)
-  const fetchUser = useAuthStore((state)=>state.fetchUserDataAndUpdateStore)
-  const user = useAuthStore((state)=>state.user)
-  const current_user = localStorage.getItem("User")
-  console.log("Current :::",current_user)
+  const location = useLocation();
+  const refresh = useAuthStore((state) => state.refreshAccessToken);
+  const fetchUser = useAuthStore((state) => state.fetchUserDataAndUpdateStore);
+  const user = useAuthStore((state) => state.user);
+  const current_user = localStorage.getItem("User");
+  const { teachingClasses, enrolledClasses, fetchTeachingClasses, fetchEnrolledClasses } = useClassStore();
 
-
-
-  console.log("Userhome")
-  console.log("User:",user);
-
-  
-  useEffect(()=>{
-    console.log("useEffect")
-
+  useEffect(() => {
     refresh();
     fetchUser();
+    fetchTeachingClasses();
+    fetchEnrolledClasses();
+  }, [current_user]);
 
-  },[current_user])
 
-  const teachingClasses = [];
-  const enrolledClasses = [];
-
+  console.log("Home..")
+  console.log(teachingClasses);
+  console.log(enrolledClasses);
 
 
   
   return (
     <>
-    <div className="flex w-full min-h-screen bg-[#1F2937]">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-        <div className="p-4 flex-1">
-          <Outlet />
+      {teachingClasses.length > 0 && (
+        <div>
+          <h1 className="text-3xl text-white mb-4">Teaching Classes</h1>
+          <div className="flex flex-wrap">
+            {teachingClasses.map((classroom) => (
+              <ClassCard key={classroom.id} classroom={classroom} />
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
-      
-      
+      )}
+
+      {enrolledClasses.length >0 &&(
+        <div>
+          <h1 className="text-3xl text-white mt-8 mb-4">Enrolled Classes</h1>
+              <div className="flex flex-wrap">
+                {enrolledClasses.map((classroom) => (
+                  <ClassCard key={classroom.id} classroom={classroom} />
+                ))}
+              </div>
+        </div>
+      )}
+
+              
+              
       
     </>
   )

@@ -28,9 +28,11 @@ const UserRouter = () => {
           
 
           <Route element={<PrivateRoute/>}>
-            <Route path="/h" element={<HomePage />} >
-                <Route path="profile" element={<UserProfile />} />
+            <Route element={<UserLayout/>}>
+                <Route path="/h" element={<HomePage />} >
+                <Route path="/h/profile" element={<UserProfile />} />
             </Route>
+          </Route>
 
             
           </Route>

@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from .models import Classroom, Teacher, Student
 
-class ClassroomSerializer(serializers.ModelSerializer):
+class  ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ['id', 'title', 'sections', 'description', 'banner_image', 'code', 'invite_link', 'created_at', 'updated_at']
