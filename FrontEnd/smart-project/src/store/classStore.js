@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import classApi from '../api/classroomApi';
 
 const useClassStore = create((set)=>({
+    
     teachingClasses: [],
     enrolledClasses: [],
     userRoleInClass: null,
@@ -33,7 +34,18 @@ const useClassStore = create((set)=>({
         } catch (error) {
             console.error('Failed to fetch user role in class:', error);
         }
-    }
+    },
+
+    fetchClassroomById: async (classId) => {
+      try {
+        const classroom = await classApi.fetchClassroomById(classId);
+        console.log("FetchStore: ",classroom)
+        set({ currentClass: classroom });
+      } catch (error) {
+        console.error('Failed to fetch classroom details:', error);
+      }
+    },
+
 
 
 }));

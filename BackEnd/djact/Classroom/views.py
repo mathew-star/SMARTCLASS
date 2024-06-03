@@ -81,6 +81,16 @@ class EnrolledClassesAPIView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class ClassroomDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, format=None):
+        try:
+            classroom = Classroom.objects.get(pk=pk)
+            serializer = ClassroomSerializer(classroom)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -88,10 +98,10 @@ class EnrolledClassesAPIView(APIView):
 class UserRoleInClassAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, class_id, format=None):
+    def get(self, request, pk, format=None):
         try:
             user = request.user
-            classroom = Classroom.objects.get(id=class_id)
+            classroom = Classroom.objects.get(pk=pk)
 
             is_teacher = Teacher.objects.filter(user=user, classroom=classroom).exists()
             is_student = Student.objects.filter(user=user, classroom=classroom).exists()

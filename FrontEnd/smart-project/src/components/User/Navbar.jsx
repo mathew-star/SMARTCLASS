@@ -78,7 +78,7 @@ function Navbar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Link to="profile">
+                <Link to="/profile">
                   <FaUser className="cursor-pointer w-6 h-7 me-4" />
                 </Link>
               </TooltipTrigger>

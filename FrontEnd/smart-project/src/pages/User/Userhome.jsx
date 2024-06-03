@@ -26,8 +26,7 @@ function Userhome() {
 
 
   console.log("Home..")
-  console.log(teachingClasses);
-  console.log(enrolledClasses);
+
 
 
   

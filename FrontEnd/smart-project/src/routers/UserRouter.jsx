@@ -8,6 +8,12 @@ import OTPRequest from '@/pages/User/OTPRequest';
 import VerifyOTP from '@/pages/User/VerifyOTP';
 import ResetPassword from '@/pages/User/ResetPassword';
 import NotFound from '@/components/ui/NotFound';
+import ClassDashboard from '@/pages/User/ClassDashboard';
+import ClassLayout from '@/components/Layout/ClassLayout';
+import ClassStream from '@/pages/User/ClassStream';
+import Classworks from '@/pages/User/Classworks';
+import ClassPeople from '@/pages/User/ClassPeople';
+import ClassGrade from '@/pages/User/ClassGrade';
 
 
 const HomePage = lazy(() => import('../pages/User/Userhome'));
@@ -27,14 +33,19 @@ const UserRouter = () => {
 
           
 
-          <Route element={<PrivateRoute/>}>
-            <Route element={<UserLayout/>}>
-                <Route path="/h" element={<HomePage />} >
-                <Route path="/h/profile" element={<UserProfile />} />
-            </Route>
-          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route element={<UserLayout />}>
+              <Route path="/h" element={<HomePage />} />
+              <Route path="/profile" element={<UserProfile />} />
 
-            
+              <Route path='/c/:classId' element={<ClassLayout />}>
+                  <Route path="stream" element={<ClassStream />} />
+                  <Route path="works" element={<Classworks />} />
+                  <Route path="people" element={<ClassPeople />} />
+                  <Route path="grade" element={<ClassGrade />} />
+              </Route>
+              
+            </Route>
           </Route>
 
           <Route path="*" element={<NotFound />} />
