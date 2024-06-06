@@ -1,13 +1,31 @@
 import useClassStore from '@/store/classStore';
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ClassHeader from '../User/ClassHeader';
-import LabTabs from '../User/LabTabs';
+
 import ClassroomTabs from '../User/ClassroomTabs';
 
 
 function ClassLayout() {
+  const {classId} = useParams()
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
+    const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
+    const { teachingClasses, enrolledClasses,fetchClassMembers,fetchClassroomById   } = useClassStore();
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+      fetchClassroomById(classId);
+    }, [fetchClassroomById]);
+  
+    useEffect(() => {
+      if (classId) {
+        fetchUserRoleInClass(classId);
+        fetchClassMembers(classId);
+      }
+    }, [classId, fetchUserRoleInClass, fetchClassMembers]);
+  
+
 
   return (
     <>
@@ -25,4 +43,4 @@ function ClassLayout() {
   )
 }
 
-export default ClassLayout
+export default React.memo(ClassLayout)

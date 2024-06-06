@@ -2,12 +2,25 @@ import useClassStore from '@/store/classStore';
 import React from 'react'
 import { FaRegCopy } from 'react-icons/fa';
 import { IoMdSettings } from 'react-icons/io';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ClassHeader() {
     const currentClass = useClassStore((state) => state.currentClass);
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
 
     const isTeacher= userRoleInClass.role==='teacher'? true:false;
+
+    const handleCopy = () => {
+      navigator.clipboard.writeText(currentClass.code).then(() => {
+        // Show a notification or alert to the user
+        toast.success('Class code copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        toast.error('Failed to copy class code.');
+      });
+    };
+    console.log(currentClass)
 
   return (
     <>
@@ -19,13 +32,26 @@ function ClassHeader() {
 
         <div className="flex items-center text-2xl">
           <p className="mr-2">Code: {currentClass.code}</p>
-          <FaRegCopy className="cursor-pointer me-12 w-6 h-6" />
+          <FaRegCopy onClick={handleCopy} className="cursor-pointer me-12 w-6 h-6" />
           {isTeacher && (
             <IoMdSettings className="w-8 h-8" />
           )}
           
         </div>
+        
       </div>
+      <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            />
     </>
   )
 }

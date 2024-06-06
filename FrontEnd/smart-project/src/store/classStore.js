@@ -2,10 +2,11 @@ import {create} from 'zustand';
 import classApi from '../api/classroomApi';
 
 const useClassStore = create((set)=>({
-    
+    currentClass:null,
     teachingClasses: [],
     enrolledClasses: [],
     userRoleInClass: null,
+    classMembers: { teacher: null, students: [] },
 
 
 
@@ -43,6 +44,30 @@ const useClassStore = create((set)=>({
         set({ currentClass: classroom });
       } catch (error) {
         console.error('Failed to fetch classroom details:', error);
+      }
+    },
+
+    fetchClassMembers: async (classId) => {
+      try {
+        const classMembers = await classApi.fetchClassMembers(classId);
+        set({ classMembers });
+      } catch (error) {
+        console.error('Failed to fetch class members:', error);
+      }
+    },
+  
+    removeStudents: async (classId, studentIds) => {
+      try {
+        await classApi.removeStudents(classId, studentIds);
+        // Optionally, you can refetch the members after removal
+        set((state) => ({
+          classMembers: {
+            ...state.classMembers,
+            students: state.classMembers.students.filter((student) => !studentIds.includes(student.id)),
+          },
+        }));
+      } catch (error) {
+        console.error('Failed to remove students:', error);
       }
     },
 

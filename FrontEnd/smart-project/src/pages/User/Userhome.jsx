@@ -15,13 +15,15 @@ function Userhome() {
   const fetchUser = useAuthStore((state) => state.fetchUserDataAndUpdateStore);
   const user = useAuthStore((state) => state.user);
   const current_user = localStorage.getItem("User");
-  const { teachingClasses, enrolledClasses, fetchTeachingClasses, fetchEnrolledClasses } = useClassStore();
+  const { teachingClasses, enrolledClasses, fetchTeachingClasses, fetchEnrolledClasses,fetchClassMembers   } = useClassStore();
 
   useEffect(() => {
     refresh();
     fetchUser();
     fetchTeachingClasses();
     fetchEnrolledClasses();
+    fetchClassMembers();
+
   }, [current_user]);
 
 

@@ -6,7 +6,8 @@ from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student
-from .serializers import ClassroomSerializer, StudentSerializer
+from .permissions import IsTeacher
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
@@ -117,3 +118,49 @@ class UserRoleInClassAPIView(APIView):
             return Response({"error": "Classroom not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+class FetchClassMembersView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, class_id):
+        try:
+            classroom = Classroom.objects.get(id=class_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        teacher = Teacher.objects.filter(classroom=classroom).first()
+        students = Student.objects.filter(classroom=classroom)
+        
+        teacher_serializer = TeacherSerializer(teacher)
+        student_serializer = StudentSerializer(students, many=True)
+        
+        return Response({
+            'teacher': teacher_serializer.data,
+            'students': student_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class RemoveStudentsView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsTeacher]
+
+    def post(self, request, class_id):
+        student_ids = request.data.get('student_ids', [])
+        
+        if not student_ids:
+            return Response({'error': 'No students provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            classroom = Classroom.objects.get(id=class_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        students_to_remove = Student.objects.filter(id__in=student_ids, classroom=classroom)
+        
+        if not students_to_remove.exists():
+            return Response({'error': 'No students found to remove'}, status=status.HTTP_404_NOT_FOUND)
+        
+        students_to_remove.delete()
+        
+        return Response({'success': 'Students removed successfully'}, status=status.HTTP_200_OK)

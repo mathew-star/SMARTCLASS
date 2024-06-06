@@ -23,7 +23,7 @@ const HomeSidebar = () => {
 
     return (
         <div className="flex">
-            <div className={` ${isSidebarOpen ? "w-72" : "w-20 "} bg-[#2E3748] h-screen p-5 pt-8 relative duration-300`}>
+            <div className={` ${isSidebarOpen ? "w-72" : "w-20 "} bg-[#2E3748] h-min-screen p-5 pt-8 relative duration-300`}>
                 <GoSidebarCollapse 
                     className={`absolute cursor-pointer text-white -right-3 top-9 w-10 h-10 ${!isSidebarOpen && "rotate-180"}`} 
                     onClick={toggleSidebar} 

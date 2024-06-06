@@ -64,6 +64,27 @@ const classApi = {
         }
     },
 
+     fetchClassMembers : async (classId) => {
+        try{
+        const response = await axiosInstance.get(`/class/classrooms/${classId}/members/`);
+        return response.data;
+        }
+        catch(error){
+            console.error(error);
+        }
+      },
+      
+      removeStudents : async (classId, studentIds) => {
+        try{
+        const response= await axiosInstance.post(`/class/classrooms/${classId}/remove-students/`, { student_ids: studentIds });
+        return response.data
+        }
+        catch(error){
+            console.error(error);
+        }
+      },
+      
+
 };
 
 export default classApi;

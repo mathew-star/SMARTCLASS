@@ -14,6 +14,7 @@ import ClassStream from '@/pages/User/ClassStream';
 import Classworks from '@/pages/User/Classworks';
 import ClassPeople from '@/pages/User/ClassPeople';
 import ClassGrade from '@/pages/User/ClassGrade';
+import CreateAssignment from '@/pages/User/CreateAssignment';
 
 
 const HomePage = lazy(() => import('../pages/User/Userhome'));
@@ -41,6 +42,7 @@ const UserRouter = () => {
               <Route path='/c/:classId' element={<ClassLayout />}>
                   <Route path="stream" element={<ClassStream />} />
                   <Route path="works" element={<Classworks />} />
+                  <Route path="create-assignment" element={<CreateAssignment />} />
                   <Route path="people" element={<ClassPeople />} />
                   <Route path="grade" element={<ClassGrade />} />
               </Route>
