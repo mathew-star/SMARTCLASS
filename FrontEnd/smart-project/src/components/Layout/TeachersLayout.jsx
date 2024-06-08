@@ -1,17 +1,19 @@
-import useClassStore from '@/store/classStore';
 import React, { useEffect } from 'react'
+import useClassStore from '@/store/classStore';
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ClassHeader from '../User/ClassHeader';
 
 import ClassroomTabs from '../User/ClassroomTabs';
+import TeacherRoomTabs from '../User/TeacherRoomTabs';
 
-
-function ClassLayout() {
-  const {classId} = useParams()
+function TeachersLayout() {
+    const {classId} = useParams()
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
     const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
-    const { teachingClasses, enrolledClasses,fetchClassMembers,fetchClassroomById   } = useClassStore();
+    const { fetchClassMembers,fetchClassroomById   } = useClassStore();
     const navigate = useNavigate()
+
+    const isTeacher= userRoleInClass.role==='teacher'? true:false;
 
 
     useEffect(() => {
@@ -19,24 +21,20 @@ function ClassLayout() {
       fetchUserRoleInClass(classId);
       fetchClassMembers(classId);
     }, [fetchClassroomById,classId, fetchUserRoleInClass, fetchClassMembers]);
-  
-  
 
-
+    
   return (
     <>
-    <div className='p-4 text-white'>
+        <div className='p-4 text-white'>
 
-        <ClassHeader/>
-        <ClassroomTabs/>
-        <main>
-            <Outlet/>
-        </main>
-    </div>
-
+            <TeacherRoomTabs/>
+            <main>
+                <Outlet/>
+            </main>
+        </div>
       
     </>
   )
 }
 
-export default React.memo(ClassLayout)
+export default TeachersLayout

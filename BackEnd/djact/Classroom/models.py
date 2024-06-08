@@ -48,3 +48,63 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.user.name} - {self.classroom.title}"
+    
+class Announcements(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    announcement= models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Announcement by {self.user.name} in {self.classroom.title}"
+    
+
+
+class Topic(models.Model):
+    title = models.CharField(max_length=255)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+class Assignment(models.Model):
+    title = models.CharField(max_length=255)
+    instructions = models.TextField()
+    files = models.ManyToManyField('AssignmentFile', blank=True)
+    due_date = models.DateTimeField(blank=True, null=True)
+    points = models.IntegerField(default=100)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, blank=True)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    assigned_students = models.ManyToManyField(Student, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+class AssignmentFile(models.Model):
+    file = models.FileField(upload_to='assignment_files/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return os.path.basename(self.file.name)
+
+class Submission(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    files = models.ManyToManyField('SubmissionFile', blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[('submitted', 'Submitted'), ('not_submitted', 'Not Submitted'), ('late', 'Late')], default='not_submitted')
+
+    def __str__(self):
+        return f"{self.student.user.name} - {self.assignment.title}"
+
+class SubmissionFile(models.Model):
+    file = models.FileField(upload_to='submission_files/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return os.path.basename(self.file.name)

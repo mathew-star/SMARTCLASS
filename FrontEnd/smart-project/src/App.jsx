@@ -6,6 +6,10 @@ import AdminRouter from './routers/AdminRouter';
 import useAuthStore from './store/authStore';
 import Loader from './components/ui/Loader';
 import NotFound from './components/ui/NotFound';
+import Modal from 'react-modal';
+
+// Set the app element
+Modal.setAppElement('#root');
 
 
 

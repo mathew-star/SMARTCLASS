@@ -5,12 +5,19 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from .models import Classroom, Teacher, Student
+from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
+import json
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -164,3 +171,145 @@ class RemoveStudentsView(APIView):
         students_to_remove.delete()
         
         return Response({'success': 'Students removed successfully'}, status=status.HTTP_200_OK)
+    
+
+class AnnouncementView(APIView):
+    permission_classes=[IsAuthenticated,IsTeacher]
+
+    def post(self,request,class_id):
+        user = request.user
+        announcement = request.data.get('announcement')
+        if not announcement:
+            return Response({'error': 'Announcement text is required'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            classroom = Classroom.objects.get(id=class_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        announcement_object=Announcements.objects.create(user=user,classroom=classroom,announcement=announcement)
+        serializer = announcementSerializer(announcement_object)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get(self, request, class_id):
+        try:
+            classroom = Classroom.objects.get(id=class_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        announcements = Announcements.objects.filter(classroom=classroom).order_by('-created_at')
+        serializer = announcementSerializer(announcements, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class TeacherTopicsAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        classroom_id = self.kwargs['classroom_id']
+        return Topic.objects.filter(classroom_id=classroom_id)
+
+    def perform_create(self, serializer):
+        classroom_id = self.kwargs['classroom_id']
+        classroom = Classroom.objects.get(id=classroom_id)
+        serializer.save(classroom=classroom)
+
+
+
+
+
+class TeacherAssignmentsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get(self, request, classroom_id):
+        teacher = get_object_or_404(Teacher, user=request.user, classroom__id=classroom_id)
+        assignments = Assignment.objects.filter(created_by=teacher)
+        serializer = AssignmentSerializer(assignments, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, classroom_id):
+        teacher = get_object_or_404(Teacher, user=request.user, classroom__id=classroom_id)
+        data = request.data.copy()
+        data['classroom'] = teacher.classroom.id
+        data['created_by'] = teacher.id
+
+        # Convert assigned_students to a list of IDs
+        assigned_students = request.POST.getlist('assigned_students[]')
+        data.setlist('assigned_students', assigned_students)
+
+        serializer = AssignmentSerializer(data=data)
+
+        if serializer.is_valid():
+            assignment = serializer.save()
+            # Handle file uploads
+            for file in request.FILES.getlist('files'):
+                assignment_file = AssignmentFile.objects.create(file=file)
+                assignment.files.add(assignment_file)
+            assignment.save()  # Save the assignment after adding the files
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class TeacherAssignmentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AssignmentSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = 'assignment_id'
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        teacher = get_object_or_404(Teacher, user=self.request.user, classroom__id=self.kwargs['classroom_id'])
+        return Assignment.objects.filter(created_by=teacher)
+
+    def update(self, request, *args, **kwargs):
+        assignment = self.get_object()
+        data = request.data.copy()
+        assigned_students = request.POST.getlist('assigned_students[]')
+        data.setlist('assigned_students', assigned_students)
+
+        serializer = self.get_serializer(assignment, data=data, partial=True)
+
+        if serializer.is_valid():
+            assignment = serializer.save()
+            # Handle file uploads
+            if 'files' in request.FILES:
+                for file in request.FILES.getlist('files'):
+                    assignment_file = AssignmentFile.objects.create(file=file)
+                    assignment.files.add(assignment_file)
+            assignment.save()  # Save the assignment after adding the files
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        assignment = self.get_object()
+        assignment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+
+class StudentAssignmentsAPIView(generics.ListAPIView):
+    serializer_class = AssignmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        student = get_object_or_404(Student, user=self.request.user, classroom__id=self.kwargs['classroom_id'])
+        return Assignment.objects.filter(assigned_students=student)
+
+class SubmissionCreateAPIView(generics.CreateAPIView):
+    serializer_class = SubmissionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        assignment = get_object_or_404(Assignment, id=self.kwargs['assignment_id'])
+        student = get_object_or_404(Student, user=self.request.user)
+        serializer.save(assignment=assignment, student=student, status='submitted')
+
+class SubmissionDetailAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = SubmissionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Submission.objects.filter(student__user=self.request.user)

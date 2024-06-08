@@ -83,7 +83,91 @@ const classApi = {
             console.error(error);
         }
       },
+
+      createAssignment: async (classId,assignmentData) => {
+        console.log(assignmentData)
+        try {
+          const response = await axiosInstance.post(`/class/classrooms/${classId}/teacher/assignments/`, assignmentData,{
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error('Failed to create assignment:', error);
+          throw error;
+        }
+      },
       
+      fetchTopic:async (classId)=>{
+        try{
+            const response = await axiosInstance.get(`/class/classrooms/${classId}/topics/`)
+            return response.data;
+        }
+        catch(error){
+            console.error(error)
+        }
+      },
+
+      createTopic:async(classId,title)=>{
+        try{
+            const response = await axiosInstance.post(`/class/classrooms/${classId}/topics/`,{title});
+            return response.data;
+        }
+        catch(error){
+            console.log(error)
+        }
+      },
+
+
+
+  fetchAssignments: async (classId) => {
+    try {
+      const response = await axiosInstance.get(`/class/classrooms/${classId}/teacher/assignments/`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch assignments:', error);
+      throw error;
+    }
+  },
+
+
+  fetchAssignmentDetails:async(classId,assignmentId)=>{
+    try{
+        const response = await axiosInstance.get(`class/classrooms/${classId}/teacher/assignments/${assignmentId}/`);
+        return response.data
+    }
+    catch(error){
+        console.log(error)
+    }
+  },
+
+  updateAssignment: async (classroomId, assignmentId, formData) => {
+    try {
+      const response = await axiosInstance.put(`class/classrooms/${classroomId}/teacher/assignments/${assignmentId}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating assignment:', error);
+      throw error;
+    }
+  },
+
+  deleteAssignment: async (classroomId, assignmentId) => {
+    try {
+      const response = await axiosInstance.delete(`class/classrooms/${classroomId}/teacher/assignments/${assignmentId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting assignment:', error);
+      throw error;
+    }
+  },
+
+
+
 
 };
 

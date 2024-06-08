@@ -120,8 +120,17 @@ function ClassPeople() {
         )}
         <ul className="space-y-4">
           {classMembers.students.map((student) => (
+            <div>
             <li key={student.id} className="flex items-center justify-between  p-4 ">
               <div className="flex items-center space-x-4">
+              {userRoleInClass?.role === 'teacher' && (
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-blue-600"
+                  checked={selectedStudents.includes(student.id)}
+                  onChange={() => handleSelectStudent(student.id)}
+                />
+              )}
                 {student.user.profile_pic ? <img className="w-12 h-12 rounded-full object-cover" src={`${BASE_URL}${student.user.profile_pic}`} alt={student.user.name} />
                 : <Avatar {...stringAvatar(student.user.name)} />
                 }
@@ -131,18 +140,14 @@ function ClassPeople() {
                   <p className="text-gray-400">{student.user.email}</p>
                 </div>
               </div>
-              {userRoleInClass?.role === 'teacher' && (
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-5 w-5 text-blue-600"
-                  checked={selectedStudents.includes(student.id)}
-                  onChange={() => handleSelectStudent(student.id)}
-                />
-              )}
+              
+              
             </li>
+            <hr className='text-white mt-2 '/>
+            </div>
             
           ))}
-          <hr className='text-white'/>
+          
         </ul>
       </div>
     </div>

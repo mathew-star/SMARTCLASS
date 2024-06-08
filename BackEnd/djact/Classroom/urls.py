@@ -1,6 +1,16 @@
 # urls.py
 from django.urls import path
-from .views import CreateClassroomView, JoinClassroomView,TeachingClassesAPIView, EnrolledClassesAPIView, UserRoleInClassAPIView,ClassroomDetailView,FetchClassMembersView, RemoveStudentsView
+from .views import(  CreateClassroomView, JoinClassroomView,
+    TeachingClassesAPIView, EnrolledClassesAPIView, 
+    UserRoleInClassAPIView,ClassroomDetailView,FetchClassMembersView, 
+    RemoveStudentsView,AnnouncementView,    
+    TeacherAssignmentsAPIView,
+    TeacherAssignmentDetailAPIView,
+    StudentAssignmentsAPIView,
+    SubmissionCreateAPIView,
+    SubmissionDetailAPIView,
+    TeacherTopicsAPIView,
+)
 
 urlpatterns = [
     path('create/', CreateClassroomView.as_view(), name='create-classroom'),
@@ -11,4 +21,11 @@ urlpatterns = [
     path('user-role/<int:pk>/', UserRoleInClassAPIView.as_view(), name='user_role_in_class'),
     path('classrooms/<int:class_id>/members/', FetchClassMembersView.as_view(), name='fetch_class_members'),
     path('classrooms/<int:class_id>/remove-students/', RemoveStudentsView.as_view(), name='remove_students'),
+    path('classroom/<int:class_id>/announcements/', AnnouncementView.as_view(), name='class-announcements'),
+    path('classrooms/<int:classroom_id>/topics/', TeacherTopicsAPIView.as_view(), name='teacher-topics'),
+    path('classrooms/<int:classroom_id>/teacher/assignments/', TeacherAssignmentsAPIView.as_view(), name='teacher-assignments'),
+    path('classrooms/<int:classroom_id>/teacher/assignments/<int:assignment_id>/', TeacherAssignmentDetailAPIView.as_view(), name='teacher-assignment-detail'),
+    path('classrooms/<int:classroom_id>/student/assignments/', StudentAssignmentsAPIView.as_view(), name='student-assignments'),
+    path('assignments/<int:assignment_id>/submit/', SubmissionCreateAPIView.as_view(), name='submit-assignment'),
+    path('submissions/<int:submission_id>/', SubmissionDetailAPIView.as_view(), name='submission-detail'),
 ]

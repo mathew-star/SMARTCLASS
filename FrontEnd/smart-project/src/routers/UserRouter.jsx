@@ -15,12 +15,15 @@ import Classworks from '@/pages/User/Classworks';
 import ClassPeople from '@/pages/User/ClassPeople';
 import ClassGrade from '@/pages/User/ClassGrade';
 import CreateAssignment from '@/pages/User/CreateAssignment';
+import TeachersLayout from '@/components/Layout/TeachersLayout';
+import StudentsWorks from '@/pages/User/StudentsWorks';
 
 
 const HomePage = lazy(() => import('../pages/User/Userhome'));
 const UserProfile = lazy(() => import('../pages/User/UserProfile'));
 const UserLogin = lazy(() => import('../pages/User/UserLogin'));
 const UserSignUp = lazy(() => import('../pages/User/UserRegister'));
+const AssignmentDetails = lazy(()=> import('../pages/User/AssignmentDetails'));
 
 const UserRouter = () => {
   return (
@@ -45,6 +48,11 @@ const UserRouter = () => {
                   <Route path="create-assignment" element={<CreateAssignment />} />
                   <Route path="people" element={<ClassPeople />} />
                   <Route path="grade" element={<ClassGrade />} />
+                  <Route path='t' element={<TeachersLayout/>}>
+                    <Route path=':assignmentId/assignment_details' element={<AssignmentDetails/> } />
+                    <Route path=':assignmentId/student_works' element={<StudentsWorks/> } />
+
+                  </Route>
               </Route>
               
             </Route>
