@@ -166,8 +166,38 @@ const classApi = {
     }
   },
 
+  fetchStudentAssignments:async(classId)=>{
+    try{
+      const response = await axiosInstance.get(`class/classrooms/${classId}/student/assignments/`);
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
 
+  fetchStudentsdetails:async(classId,assignmentId)=>{
+    const resp= await axiosInstance.get(`class/classrooms/${classId}/assignments/${assignmentId}/`)
+    return resp.data
+  },
 
+  submitAssignment:async(classId,assignmentId,formData)=>{
+    try{
+      const response = await axiosInstance.post(
+        `/class/classrooms/${classId}/assignments/${assignmentId}/submit/`,
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }
+    );
+    return response.data;
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
 
 };
 

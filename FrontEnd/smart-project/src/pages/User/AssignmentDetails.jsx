@@ -66,31 +66,14 @@ function AssignmentDetails() {
 
 
 
-  const filtered_topic = topics.filter((topic)=>topic.value===2)
-
-  filtered_topic.map((topic)=>{
-    setSelectedTopic(topic)
-  })
+  useEffect(() => {
+    if (topics.length > 0 && fetchtopicId !== null) {
+      const filtered_topic = topics.find((topic) => topic.value === fetchtopicId);
+      setSelectedTopic(filtered_topic || null);
+    }
+  }, [topics, fetchtopicId]);
   
-//   const [fetchtopicId,setfetchtopicId]= useState(null)
-//   const [selectedTopic, setSelectedTopic] = useState(null);
-//   const [topics, setTopics] = useState([]);
 
-// setfetchtopicId(data.topic);
-
-// I only get the id of the topic , when we fetch the assignment ,
-// I have done  something to setSelectedTopic>>
-
-//   const filtered_topic = topics.filter((topic)=>topic.value===2)
-
-//   filtered_topic.map((topic)=>{
-//     setSelectedTopic(topic)
-//   })
-//   But error occurs>>
-// Something went wrong:
-
-// Too many re-renders. React limits the number of renders to prevent an infinite loop.
-// Try again
 
 
   const handleFileChange = (e) => {
@@ -204,6 +187,7 @@ function AssignmentDetails() {
                     </label>
                     <input 
                       disabled={!isEditing} 
+                      
                       id="file-upload" 
                       type="file" 
                       className='hidden' 
@@ -247,7 +231,7 @@ function AssignmentDetails() {
 
               {selectedTopic && (
                 <div className="mt-4 text-center text-gray-700">
-                  <p>Selected: {filtered_topic.label}</p>
+                  <p>Selected: {selectedTopic.label}</p>
                 </div>
               )}
             </div>

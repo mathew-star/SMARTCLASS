@@ -11,6 +11,7 @@ function ClassStream() {
     const { classId } = useParams();
     const currentClass = useClassStore((state) => state.currentClass);
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
+    const isTeacher= userRoleInClass==='teacher'? true:false
     const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
     const fetchClassroomById = useClassStore((state) => state.fetchClassroomById);
   
@@ -29,7 +30,8 @@ function ClassStream() {
             alt={currentClass.title}
           />
   
-          <div className="flex w-full md:w-[80%] lg:w-[60%] h-20 rounded-lg bg-[#17192F] opacity-90 items-center px-4">
+          {isTeacher&&(
+            <div className="flex w-full md:w-[80%] lg:w-[60%] h-20 rounded-lg bg-[#17192F] opacity-90 items-center px-4">
             <FaUser className="text-white w-6 h-7" />
             <input
               type="text"
@@ -38,6 +40,8 @@ function ClassStream() {
             />
             <MdSend className="cursor-pointer w-6 h-7 ml-4" />
           </div>
+          )}
+
         </div>
   
     );

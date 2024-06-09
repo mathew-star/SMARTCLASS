@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
@@ -253,6 +253,8 @@ class TeacherAssignmentsAPIView(APIView):
 
 
 
+
+
 class TeacherAssignmentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AssignmentSerializer
     permission_classes = [IsAuthenticated]
@@ -297,19 +299,79 @@ class StudentAssignmentsAPIView(generics.ListAPIView):
     def get_queryset(self):
         student = get_object_or_404(Student, user=self.request.user, classroom__id=self.kwargs['classroom_id'])
         return Assignment.objects.filter(assigned_students=student)
+    
 
-class SubmissionCreateAPIView(generics.CreateAPIView):
-    serializer_class = SubmissionSerializer
+
+class StudentSubmissionView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, class_id, assignment_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            student = Student.objects.get(user=request.user, classroom_id=class_id)
+        except Student.DoesNotExist:
+            return Response({'error': 'Student not found or not part of this classroom'}, status=status.HTTP_404_NOT_FOUND)
+
+        files = request.FILES.getlist('files')
+        submission, created = Submission.objects.get_or_create(student=student, assignment=assignment)
+
+        for file in files:
+            submission_file = SubmissionFile.objects.create(file=file)
+            submission.files.add(submission_file)
+
+        submission.status = 'submitted'
+        submission.save()
+
+        serializer = SubmissionSerializer(submission)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get(self, request, class_id, assignment_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+            student = Student.objects.get(user=request.user, classroom_id=class_id)
+            submission = Submission.objects.get(student=student, assignment=assignment)
+        except (Assignment.DoesNotExist, Submission.DoesNotExist, Student.DoesNotExist):
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SubmissionSerializer(submission)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class StudentSpecificSubmissionView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        assignment = get_object_or_404(Assignment, id=self.kwargs['assignment_id'])
-        student = get_object_or_404(Student, user=self.request.user)
-        serializer.save(assignment=assignment, student=student, status='submitted')
+    def get(self, request, class_id, assignment_id, student_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            submission = Submission.objects.get(assignment=assignment, student_id=student_id)
+        except Submission.DoesNotExist:
+            return Response({'error': 'Submission not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class SubmissionDetailAPIView(generics.RetrieveUpdateAPIView):
-    serializer_class = SubmissionSerializer
+        serializer = SubmissionSerializer(submission)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+    
+
+class StudentAssignmentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Submission.objects.filter(student__user=self.request.user)
+    def get(self, request, classroom_id, assignment_id):
+        try:
+            classroom = Classroom.objects.get(id=classroom_id)
+            assignment = Assignment.objects.get(classroom=classroom, id=assignment_id)
+            serializer = StudentAssignmentSerializer(assignment)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)

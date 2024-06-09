@@ -24,6 +24,7 @@ const UserProfile = lazy(() => import('../pages/User/UserProfile'));
 const UserLogin = lazy(() => import('../pages/User/UserLogin'));
 const UserSignUp = lazy(() => import('../pages/User/UserRegister'));
 const AssignmentDetails = lazy(()=> import('../pages/User/AssignmentDetails'));
+const StudentAssignmentDetails = lazy(()=> import('@/pages/User/StudentAssignmentDetails'))
 
 const UserRouter = () => {
   return (
@@ -48,6 +49,7 @@ const UserRouter = () => {
                   <Route path="create-assignment" element={<CreateAssignment />} />
                   <Route path="people" element={<ClassPeople />} />
                   <Route path="grade" element={<ClassGrade />} />
+                  <Route path='s/:assignmentId/assignment_details' element={<StudentAssignmentDetails />}/>
                   <Route path='t' element={<TeachersLayout/>}>
                     <Route path=':assignmentId/assignment_details' element={<AssignmentDetails/> } />
                     <Route path=':assignmentId/student_works' element={<StudentsWorks/> } />

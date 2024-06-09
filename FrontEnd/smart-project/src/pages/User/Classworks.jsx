@@ -1,5 +1,6 @@
 import classApi from '@/api/classroomApi';
 import CreateTopicModal from '@/components/User/CreateTopicModal';
+import StudentAssignmentList from '@/components/User/StudentAssignmentList';
 import TeachersAssignmentList from '@/components/User/TeachersAssignmentList';
 import TopicDropdown from '@/components/User/TopicDropdown';
 import useClassStore from '@/store/classStore';
@@ -24,6 +25,9 @@ function Classworks() {
   const [topics, setTopics] = useState([]);
   const [isModalOpen,setIsModalOpen]=useState(false)
   const [assignments, setAssignments] = useState([]);
+
+
+  const [studentAssignments, setstudentAssignments]=useState([])
 
   const { currentClass } = useClassStore((state) => ({
     currentClass: state.currentClass,
@@ -58,13 +62,33 @@ function Classworks() {
     }
   };
 
+  const fetchStudentAssignments=async()=>{
+    const data = await classApi.fetchStudentAssignments(currentClass.id)
+    console.log(data)
+    const formattedStudentData = data.map(assignment => ({
+      ...assignment,
+      formatted_dates: { 
+        created_at: formatDate(assignment.created_at),
+        due_date: assignment.due_date?formatDate(assignment.due_date):'',
+      }
+    }));
+    setstudentAssignments(formattedStudentData)
+
+  };
+
 
   
 
   useEffect(() => {
 
       fetchTopics();
-      fetchAssignments();
+      {isTeacher&&(
+        fetchAssignments()
+      )}
+      {isStudent&&(
+        fetchStudentAssignments()
+      )}
+      
 
   }, [currentClass]);
 
@@ -107,6 +131,7 @@ function Classworks() {
   return (
     <>
     {isTeacher &&(
+      <>
       <div className='relative flex flex-wrap items-center justify-between'>
         <button onClick={toggleCreateDropdown}
             className="w-20 ms-10 bg-blue-600 text-white text-lg font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
@@ -141,12 +166,20 @@ function Classworks() {
         onSave={handleTopicSave}
       />
       </div>
-    )}
 
-    {isTeacher&&(
       <div className='flex justify-center items-center mt-20 h-full'>
         <TeachersAssignmentList assignments={assignments} />
       </div>
+      </>
+    )}
+
+    {isStudent&&(
+      <>
+        <div className='flex justify-center items-center mt-20 h-full'>
+        <StudentAssignmentList assignments={studentAssignments} />
+      </div>
+      
+      </>
     )}
 
     

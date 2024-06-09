@@ -98,6 +98,7 @@ class Submission(models.Model):
     files = models.ManyToManyField('SubmissionFile', blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[('submitted', 'Submitted'), ('not_submitted', 'Not Submitted'), ('late', 'Late')], default='not_submitted')
+    points = models.IntegerField(null=True, blank=True,default=0)
 
     def __str__(self):
         return f"{self.student.user.name} - {self.assignment.title}"

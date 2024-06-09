@@ -26,6 +26,14 @@ const FilePreviewModal = ({ isOpen, onClose, file }) => {
   if (!file) return null;
 
   const isImage = file.file.match(/\.(jpeg|jpg|gif|png)$/) != null;
+  const forceDownload = (url, fileName) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   return (
     <Modal
@@ -34,18 +42,30 @@ const FilePreviewModal = ({ isOpen, onClose, file }) => {
       style={customStyles}
       contentLabel="File Preview"
     >
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
         <MdClose className="cursor-pointer" onClick={onClose} />
+        {isImage&&(
+          <button
+          onClick={() => forceDownload(file.file, file.file.split('/').pop())}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+        >Download </button>
+        )}
       </div>
       <div className="flex justify-center items-center h-full">
         {isImage ? (
           <img src={file.file} alt="Preview" className="max-h-full max-w-full" />
         ) : (
-          <iframe
-            src={file.file}
-            title="File Preview"
-            className="w-full h-full"
-          ></iframe>
+          <div className="flex flex-col items-center justify-center">
+            <p className="mb-4">Preview not available. Click the button below to download the file.</p>
+            <a
+              href={file.file}
+              target='_blank'
+              download
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+              Download File
+            </a>
+          </div>
         )}
       </div>
     </Modal>

@@ -25,7 +25,7 @@ function TeachersLayout() {
     
   return (
     <>
-        <div className='p-4 text-white'>
+        <div className='p-4 h-screen text-white'>
 
             <TeacherRoomTabs/>
             <main>
