@@ -26,7 +26,8 @@ function TeachersAssignmentList({ assignments }) {
               <FaClipboardList className='w-6 h-6 text-blue-500 mr-4' />
               <div className='flex flex-col'>
                 <span className='text-lg font-semibold text-white'>{assignment.title}</span>
-                <span className='text-sm text-gray-400'>Posted on {new Date(assignment.posted_date).toLocaleDateString()}</span>
+                <span className='text-sm text-gray-400'>Posted on {(assignment.formatted_dates.created_at)}</span>
+                <span className='text-sm text-gray-400'>{(assignment.formatted_dates.due_date)?(assignment.formatted_dates.due_date):"No due date"}</span>
               </div>
             </li>
           ))}

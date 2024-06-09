@@ -33,14 +33,33 @@ function Classworks() {
     const data = await classApi.fetchTopic(currentClass.id);
     console.log(data)
     setTopics(data.map(topic => ({ value: topic.id, label: topic.title })));
+
+
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'long' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  
   const fetchAssignments = async () => {
     if (currentClass) {
       const data = await classApi.fetchAssignments(currentClass.id);
-      setAssignments(data);
+      const formattedData = data.map(assignment => ({
+        ...assignment,
+        formatted_dates: { 
+          created_at: formatDate(assignment.created_at),
+          due_date: assignment.due_date?formatDate(assignment.due_date):'',
+        }
+      }));
+      setAssignments(formattedData);
     }
   };
+
+
+  
 
   useEffect(() => {
 
@@ -50,7 +69,7 @@ function Classworks() {
   }, [currentClass]);
 
 
-
+  console.log(assignments)
 
 
   const toggleCreateDropdown = () => {

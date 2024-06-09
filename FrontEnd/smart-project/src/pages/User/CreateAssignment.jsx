@@ -81,12 +81,12 @@ function CreateAssignment() {
 
     try {
       const response = await classApi.createAssignment(currentClass.id,formData);
-      toast.success('Class code copied to clipboard!');
+      toast.success('Assignment created successfully');
       console.log('Assignment created successfully:', response.data);
     } catch (error) {
 
       console.error('Error creating assignment:', error);
-      toast.error('Failed to copy class code.');
+      toast.error('Failed to create');
     }
   };
 

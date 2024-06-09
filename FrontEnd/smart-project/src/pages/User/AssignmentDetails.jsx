@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useParams, useNavigate, useMatch } from 'react-router-dom';
 import { MdClose, MdOutlineDriveFolderUpload } from "react-icons/md";
 import SelectStudentsModal from '@/components/User/SelectStudentsModal';
 import TopicDropdown from '@/components/User/TopicDropdown';
@@ -16,6 +16,7 @@ function AssignmentDetails() {
   const [assignment, setAssignment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [fetchtopicId,setfetchtopicId]= useState(null)
 
   const [title, setTitle] = useState('');
   const [instructions, setInstructions] = useState('');
@@ -36,9 +37,10 @@ function AssignmentDetails() {
         setAssignment(data);
         setTitle(data.title);
         setInstructions(data.instructions);
-        setDueDate(data.due_date);
+        const formattedDueDate = new Date(data.due_date).toISOString().split('T')[0];
+        setDueDate(formattedDueDate);
         setTotalPoints(data.points);
-        setSelectedTopic(data.topic);
+        setfetchtopicId(data.topic);
         setSelectedStudents(data.assigned_students || []);
         setFiles(data.files || []);
         setLoading(false);
@@ -56,12 +58,40 @@ function AssignmentDetails() {
         console.error('Error fetching topics:', error);
       }
     };
+    
 
     fetchAssignmentDetails();
     fetchTopics();
-  }, [classId, assignmentId]);
+  }, [classId, assignmentId]);  
 
-  console.log(dueDate)
+
+
+  const filtered_topic = topics.filter((topic)=>topic.value===2)
+
+  filtered_topic.map((topic)=>{
+    setSelectedTopic(topic)
+  })
+  
+//   const [fetchtopicId,setfetchtopicId]= useState(null)
+//   const [selectedTopic, setSelectedTopic] = useState(null);
+//   const [topics, setTopics] = useState([]);
+
+// setfetchtopicId(data.topic);
+
+// I only get the id of the topic , when we fetch the assignment ,
+// I have done  something to setSelectedTopic>>
+
+//   const filtered_topic = topics.filter((topic)=>topic.value===2)
+
+//   filtered_topic.map((topic)=>{
+//     setSelectedTopic(topic)
+//   })
+//   But error occurs>>
+// Something went wrong:
+
+// Too many re-renders. React limits the number of renders to prevent an infinite loop.
+// Try again
+
 
   const handleFileChange = (e) => {
     setFiles([...files, ...e.target.files]);
@@ -205,14 +235,19 @@ function AssignmentDetails() {
             <p>Topic</p>
             <div>
               {topics.length > 0 ? (
-                <TopicDropdown options={topics} placeholder="Select an option" onSelect={handleSelect} />
+                <TopicDropdown
+                options={topics}
+                placeholder="Select an option"
+                selectedTopic={selectedTopic}
+                onSelect={handleSelect}
+              />
               ) : (
                 <p>No topics</p>
               )}
 
               {selectedTopic && (
                 <div className="mt-4 text-center text-gray-700">
-                  <p>Selected: {selectedTopic.label}</p>
+                  <p>Selected: {filtered_topic.label}</p>
                 </div>
               )}
             </div>
@@ -298,4 +333,4 @@ function AssignmentDetails() {
   );
 }
 
-export default AssignmentDetails;
+export default React.memo(AssignmentDetails);
