@@ -35,7 +35,7 @@ function AdminLogin() {
     onSubmit: async (values) => {
       try {
         await login(values);
-        navigate('/admin/home');
+        navigate('/admin/h');
       } catch (error) {
         console.error('Login failed:', error);
       }

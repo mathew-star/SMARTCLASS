@@ -114,11 +114,14 @@ class UserRoleInClassAPIView(APIView):
             is_teacher = Teacher.objects.filter(user=user, classroom=classroom).exists()
             is_student = Student.objects.filter(user=user, classroom=classroom).exists()
 
+            
+
             role = "none"
             if is_teacher:
                 role = "teacher"
             elif is_student:
                 role = "student"
+
 
             return Response({"role": role}, status=status.HTTP_200_OK)
         except Classroom.DoesNotExist:

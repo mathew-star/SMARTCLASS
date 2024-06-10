@@ -1,5 +1,5 @@
 // src/components/ClassCard.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BASE_URL } from '@/utils/constants';
 import { RxEnter } from "react-icons/rx";
 import { useNavigate } from 'react-router-dom';
@@ -10,12 +10,24 @@ function ClassCard({ classroom }) {
   const navigate = useNavigate();
   const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
   const fetchClassroomById = useClassStore((state) => state.fetchClassroomById);
+  
+
+  useEffect(()=>{
+    const fetchClass= async()=>{
+      await fetchClassroomById(classroom.id);
+      await fetchUserRoleInClass(classroom.id);
+    }
+
+    fetchClass();
+  },[])
+
 
 
   const handleClick = async () => {
     await fetchClassroomById(classroom.id);
     await fetchUserRoleInClass(classroom.id);
     navigate(`/c/${classroom.id}/stream`);
+
   };
   return (
     <div className="bg-[#596173] text-white rounded-lg shadow-md overflow-hidden w-64 m-4">
