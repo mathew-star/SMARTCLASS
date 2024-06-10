@@ -12,16 +12,12 @@ function StudentAssignmentDetails() {
     const navigate = useNavigate();
     const [assignment, setAssignment] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [fetchtopicId, setfetchtopicId] = useState(null)
+    
 
     const [title, setTitle] = useState('');
-    const [instructions, setInstructions] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [totalPoints, setTotalPoints] = useState('');
-    const [selectedTopic, setSelectedTopic] = useState(null);
-    const [selectedStudents, setSelectedStudents] = useState([]);
     const [files, setFiles] = useState([]);
-    const [topics, setTopics] = useState([]);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [studentFiles, setStudentFiles] = useState([]);

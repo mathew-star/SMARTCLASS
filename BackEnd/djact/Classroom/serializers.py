@@ -54,7 +54,7 @@ class AssignmentFileSerializer(serializers.ModelSerializer):
 
 class AssignmentSerializer(serializers.ModelSerializer):
     files = AssignmentFileSerializer(many=True, read_only=True)
-    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), allow_null=True, required=False)
+    topic = TopicSerializer()
     assigned_students = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), many=True, required=False)
     created_by=TeacherSerializer(read_only=True)
 

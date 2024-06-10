@@ -104,7 +104,7 @@ class Submission(models.Model):
         return f"{self.student.user.name} - {self.assignment.title}"
 
 class SubmissionFile(models.Model):
-    file = models.FileField(upload_to='submission_files/')
+    file = models.FileField(upload_to='submission_files/') 
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

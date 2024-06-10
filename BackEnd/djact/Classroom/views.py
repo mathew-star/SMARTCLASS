@@ -358,6 +358,25 @@ class StudentSpecificSubmissionView(APIView):
 
         serializer = SubmissionSerializer(submission)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, class_id, assignment_id, student_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            submission = Submission.objects.get(assignment=assignment, student_id=student_id)
+        except Submission.DoesNotExist:
+            return Response({'error': 'Submission not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        points = request.data.get('points')
+        if points is not None:
+            submission.points = points
+            submission.save()
+            return Response({'message': 'Points updated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Points not provided'}, status=status.HTTP_400_BAD_REQUEST)
     
 
     
@@ -375,3 +394,13 @@ class StudentAssignmentAPIView(APIView):
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
         except Assignment.DoesNotExist:
             return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class FetchClassroomsAPIView(APIView):
+    def get(self, request, format=None):
+        try:
+            classrooms = Classroom.objects.all()
+            serializer = ClassroomSerializer(classrooms, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -184,7 +184,7 @@ const classApi = {
   submitAssignment:async(classId,assignmentId,formData)=>{
     try{
       const response = await axiosInstance.post(
-        `/class/classrooms/${classId}/assignments/${assignmentId}/submit/`,
+        `class/classrooms/${classId}/assignments/${assignmentId}/submit/`,
         formData,
         {
             headers: {
@@ -193,6 +193,36 @@ const classApi = {
         }
     );
     return response.data;
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
+  FetchStudentSubmission:async(classId,assignmentId,studentId)=>{
+    try{
+      const response = await axiosInstance.get(`class/classrooms/${classId}/submission/${assignmentId}/${studentId}/`);
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
+  SubmitPoints:async(classId,assignmentId,studentId,points)=>{
+    try{
+      const response = await axiosInstance.post(`class/classrooms/${classId}/submission/${assignmentId}/${studentId}/`,{'points':points});
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
+  FetchAllClasses:async()=>{
+    try{
+      const response=await axiosInstance.get('class/classrooms/');
+      return response.data
     }
     catch(error){
       console.log(error)
