@@ -64,6 +64,30 @@ const classApi = {
         }
     },
 
+    updateClassroom: async (classId, updatedData) => {
+      try {
+        const response = await axiosInstance.put(`/class/classroom/${classId}/`, updatedData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error updating classroom:', error);
+        throw error;
+      }
+    },
+  
+    deleteClassroom: async (classId) => {
+      try {
+        const response = await axiosInstance.delete(`/class/classroom/${classId}/`);
+        return response.data;
+      } catch (error) {
+        console.error('Error deleting classroom:', error);
+        throw error;
+      }
+    },
+
      fetchClassMembers : async (classId) => {
         try{
         const response = await axiosInstance.get(`/class/classrooms/${classId}/members/`);

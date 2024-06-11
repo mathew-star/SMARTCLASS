@@ -2,12 +2,14 @@ import useClassStore from '@/store/classStore';
 import React from 'react'
 import { FaRegCopy } from 'react-icons/fa';
 import { IoMdSettings } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ClassHeader() {
     const currentClass = useClassStore((state) => state.currentClass);
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
+    const navigate=useNavigate()
 
     const isTeacher= userRoleInClass.role==='teacher'? true:false;
 
@@ -34,7 +36,7 @@ function ClassHeader() {
           <p className="mr-2">Code: {currentClass.code}</p>
           <FaRegCopy onClick={handleCopy} className="cursor-pointer me-12 w-6 h-6" />
           {isTeacher && (
-            <IoMdSettings className="w-8 h-8" />
+            <IoMdSettings onClick={()=>navigate(`/c/${currentClass.id}/classroom`)} className="w-8 h-8 cursor-pointer" />
           )}
           
         </div>
