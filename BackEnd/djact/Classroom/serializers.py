@@ -54,9 +54,8 @@ class AssignmentFileSerializer(serializers.ModelSerializer):
 
 class AssignmentSerializer(serializers.ModelSerializer):
     files = AssignmentFileSerializer(many=True, read_only=True)
-    topic = TopicSerializer()
     assigned_students = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), many=True, required=False)
-    created_by=TeacherSerializer(read_only=True)
+    created_by = serializers.PrimaryKeyRelatedField(queryset=Teacher.objects.all(), required=False)
 
     class Meta:
         model = Assignment
@@ -81,6 +80,21 @@ class AssignmentSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+
+    
+class getAssignmentSerializer(serializers.ModelSerializer):
+    files = AssignmentFileSerializer(many=True, read_only=True)
+    topic=TopicSerializer()
+    assigned_students = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), many=True, required=False)
+    created_by = TeacherSerializer()
+
+    class Meta:
+        model = Assignment
+        fields = '__all__'
+
+
+
     
 class StudentAssignmentSerializer(serializers.ModelSerializer):
     assigned_students = StudentSerializer(many=True)

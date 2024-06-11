@@ -28,12 +28,9 @@ function StudentAssignmentDetails() {
                 const data = await classApi.fetchStudentsdetails(classId, assignmentId);
                 setAssignment(data);
                 setTitle(data.title);
-                setInstructions(data.instructions);
                 const formattedDueDate = new Date(data.due_date).toISOString().split('T')[0];
                 setDueDate(formattedDueDate);
                 setTotalPoints(data.points);
-                setfetchtopicId(data.topic);
-                setSelectedStudents(data.assigned_students || []);
                 setFiles(data.files || []);
                 setLoading(false);
             } catch (error) {
@@ -44,6 +41,7 @@ function StudentAssignmentDetails() {
 
         fetchAssignmentDetails();
     }, [classId, assignmentId]);
+    console.log(assignment)
 
     const handleFilePreview = (file) => {
         setSelectedFile(file);

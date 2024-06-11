@@ -72,6 +72,7 @@ function StudentsWorks() {
 
 
   }, []);
+  console.log(assignmentDetails)
 
 
   const fetchStudentSubmission = async (studentId) => {

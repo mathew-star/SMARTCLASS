@@ -76,7 +76,9 @@ function CreateAssignment() {
   files.forEach(file => {
       formData.append('files', file);
   });
-  console.log(formData.get('assigned_students'))
+
+
+
 
 
     try {
@@ -91,8 +93,6 @@ function CreateAssignment() {
   };
 
 
-  console.log(selectedStudents)
-  console.log(files)
 
 
 

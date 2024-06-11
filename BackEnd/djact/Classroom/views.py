@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
@@ -92,7 +92,7 @@ class EnrolledClassesAPIView(APIView):
 
 
 class ClassroomDetailView(APIView):
-    permission_classes = [IsAuthenticated,IsTeacher]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk, format=None):
         try:
@@ -104,7 +104,7 @@ class ClassroomDetailView(APIView):
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk, format=None):
-        
+
         try:
             classroom = Classroom.objects.get(pk=pk)
             print(classroom)
@@ -252,18 +252,23 @@ class TeacherAssignmentsAPIView(APIView):
     def get(self, request, classroom_id):
         teacher = get_object_or_404(Teacher, user=request.user, classroom__id=classroom_id)
         assignments = Assignment.objects.filter(created_by=teacher)
-        serializer = AssignmentSerializer(assignments, many=True)
+        serializer = getAssignmentSerializer(assignments, many=True)
         return Response(serializer.data)
 
     def post(self, request, classroom_id):
         teacher = get_object_or_404(Teacher, user=request.user, classroom__id=classroom_id)
+        print("teacher:", teacher.id)
+        print(request.data)
         data = request.data.copy()
         data['classroom'] = teacher.classroom.id
         data['created_by'] = teacher.id
 
+
         # Convert assigned_students to a list of IDs
         assigned_students = request.POST.getlist('assigned_students[]')
         data.setlist('assigned_students', assigned_students)
+
+        print(data)
 
         serializer = AssignmentSerializer(data=data)
 
@@ -276,7 +281,9 @@ class TeacherAssignmentsAPIView(APIView):
             assignment.save()  # Save the assignment after adding the files
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print("Serializer errors:", serializer.errors)  # Print serializer errors for debugging
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

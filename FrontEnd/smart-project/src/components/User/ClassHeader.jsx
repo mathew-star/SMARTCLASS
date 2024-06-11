@@ -1,12 +1,19 @@
 import useClassStore from '@/store/classStore';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaRegCopy } from 'react-icons/fa';
 import { IoMdSettings } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ClassHeader() {
+  const {classId}=useParams()
+  const fetchClassroomById = useClassStore((state)=> state.fetchClassroomById)
+  useEffect(()=>{
+    fetchClassroomById(classId);
+  },[])
+
+
     const currentClass = useClassStore((state) => state.currentClass);
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
     const navigate=useNavigate()

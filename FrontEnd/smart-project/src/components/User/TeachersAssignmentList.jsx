@@ -23,6 +23,7 @@ function TeachersAssignmentList({ assignments }) {
     }
     return acc;
   }, {});
+  console.log(assignments)
 
   return (
     <div className='mt-4 w-[70%] px-4 py-4'>

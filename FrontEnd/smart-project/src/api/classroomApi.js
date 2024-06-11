@@ -109,7 +109,9 @@ const classApi = {
       },
 
       createAssignment: async (classId,assignmentData) => {
-        console.log(assignmentData)
+        for (const value of assignmentData.values()) {
+          console.log(value);
+        }
         try {
           const response = await axiosInstance.post(`/class/classrooms/${classId}/teacher/assignments/`, assignmentData,{
             headers: {
