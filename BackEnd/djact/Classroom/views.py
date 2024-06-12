@@ -196,6 +196,10 @@ class RemoveStudentsView(APIView):
         if not students_to_remove.exists():
             return Response({'error': 'No students found to remove'}, status=status.HTTP_404_NOT_FOUND)
         
+
+        for student in students_to_remove:
+            student.classroom.remove(classroom)
+
         students_to_remove.delete()
         
         return Response({'success': 'Students removed successfully'}, status=status.HTTP_200_OK)
@@ -328,7 +332,7 @@ class TeacherAssignmentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     
 
 class StudentAssignmentsAPIView(generics.ListAPIView):
-    serializer_class = AssignmentSerializer
+    serializer_class = getAssignmentSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

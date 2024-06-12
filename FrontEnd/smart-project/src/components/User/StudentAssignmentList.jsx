@@ -24,6 +24,7 @@ function StudentAssignmentList({ assignments }) {
     return acc;
   }, {});
 
+
   return (
     <div className='mt-4 w-[70%] px-4 py-4'>
       {assignmentsWithoutTopic.length > 0 && (
