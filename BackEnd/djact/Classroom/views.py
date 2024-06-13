@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
@@ -30,6 +30,11 @@ class CreateClassroomView(APIView):
         serializer = ClassroomSerializer(data=request.data)
         print(serializer)
         print(serializer.is_valid())
+        classroom_title = request.data.get('title')
+        classroom_sections = request.data.get('sections')
+        if Classroom.objects.filter(title=classroom_title,sections=classroom_sections).exists():
+            return Response({'error': 'Classroom already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        
         if serializer.is_valid():
             classroom = serializer.save()
             Teacher.objects.create(user=request.user, classroom=classroom, super_teacher=True)
@@ -191,18 +196,17 @@ class RemoveStudentsView(APIView):
         except Classroom.DoesNotExist:
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
         
+        # Filter the students to remove
         students_to_remove = Student.objects.filter(id__in=student_ids, classroom=classroom)
         
         if not students_to_remove.exists():
             return Response({'error': 'No students found to remove'}, status=status.HTTP_404_NOT_FOUND)
         
-
-        for student in students_to_remove:
-            student.classroom.remove(classroom)
-
+        # Delete the Student instances
         students_to_remove.delete()
         
         return Response({'success': 'Students removed successfully'}, status=status.HTTP_200_OK)
+
     
 
 class AnnouncementView(APIView):
@@ -379,6 +383,26 @@ class StudentSubmissionView(APIView):
 
         serializer = SubmissionSerializer(submission)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+    def delete(self, request, class_id, assignment_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+            student = Student.objects.get(user=request.user, classroom_id=class_id)
+            submission = Submission.objects.get(student=student, assignment=assignment)
+        except (Assignment.DoesNotExist, Submission.DoesNotExist, Student.DoesNotExist):
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        submission.files.clear()  # Remove all associated files
+        SubmissionFile.objects.filter(submission=submission).delete()
+        submission.status = 'unsubmitted'
+        submission.save()
+
+        return Response({'success': 'Assignment unsubmitted successfully'}, status=status.HTTP_200_OK)
+    
+
+
 
 
 class StudentSpecificSubmissionView(APIView):
@@ -418,6 +442,23 @@ class StudentSpecificSubmissionView(APIView):
             return Response({'error': 'Points not provided'}, status=status.HTTP_400_BAD_REQUEST)
     
 
+class getStudentSubmissionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, class_id, assignment_id):
+        try:
+            assignment = Assignment.objects.get(id=assignment_id, classroom_id=class_id)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            student=Student.objects.get(user=request.user)
+            submission = Submission.objects.get(assignment=assignment, student=student)
+        except Submission.DoesNotExist:
+            return Response({'error': 'Submission not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SubmissionSerializer(submission)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class StudentAssignmentAPIView(APIView):
@@ -433,6 +474,22 @@ class StudentAssignmentAPIView(APIView):
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
         except Assignment.DoesNotExist:
             return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class getStudentAssignmentsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            student = Student.objects.get(user=request.user)
+            assignments = Assignment.objects.filter(assigned_students=student)
+            serializer = getStudentAssignmentSerializer(assignments, many=True, context={'student': student})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Student.DoesNotExist:
+            return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         
 
 class FetchClassroomsAPIView(APIView):

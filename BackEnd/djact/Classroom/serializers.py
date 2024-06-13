@@ -96,13 +96,7 @@ class getAssignmentSerializer(serializers.ModelSerializer):
 
 
     
-class StudentAssignmentSerializer(serializers.ModelSerializer):
-    assigned_students = StudentSerializer(many=True)
-    created_by=TeacherSerializer()
-    files = AssignmentFileSerializer(many=True, read_only=True)
-    class Meta:
-        model = Assignment
-        fields = '__all__'
+
     
 
 
@@ -119,4 +113,55 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = '__all__'
+        fields = ['assignment', 'student', 'files', 'submitted_at', 'status', 'points']
+
+
+
+class StudentAssignmentSerializer(serializers.ModelSerializer):
+    assigned_students = StudentSerializer(many=True)
+    created_by=TeacherSerializer()
+    files = AssignmentFileSerializer(many=True, read_only=True)
+    submissions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Assignment
+        fields = ['id', 'title', 'instructions', 'files', 'due_date','assigned_students', 'points', 'topic', 'created_by', 'created_at', 'updated_at', 'submissions']
+
+    def get_submissions(self, obj):
+        submissions = Submission.objects.filter(assignment=obj)
+        return SubmissionSerializer(submissions, many=True).data
+    
+
+
+class getStudentAssignmentSerializer(serializers.ModelSerializer):
+    submission_status = serializers.SerializerMethodField()
+    submission_files = serializers.SerializerMethodField()
+    submission_points = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Assignment
+        fields = ['id', 'title', 'instructions', 'due_date', 'points', 'created_at', 'updated_at', 'submission_status', 'submission_files', 'submission_points']
+
+    def get_submission_status(self, assignment):
+        student = self.context['student']
+        try:
+            submission = Submission.objects.get(assignment=assignment, student=student)
+            return submission.status
+        except Submission.DoesNotExist:
+            return 'not_submitted'
+
+    def get_submission_files(self, assignment):
+        student = self.context['student']
+        try:
+            submission = Submission.objects.get(assignment=assignment, student=student)
+            return [file.file.url for file in submission.files.all()]
+        except Submission.DoesNotExist:
+            return []
+
+    def get_submission_points(self, assignment):
+        student = self.context['student']
+        try:
+            submission = Submission.objects.get(assignment=assignment, student=student)
+            return submission.points
+        except Submission.DoesNotExist:
+            return None

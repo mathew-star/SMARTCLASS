@@ -10,6 +10,7 @@ const classApi = {
         }
         catch(error){
             console.error
+            throw error
         }
     },
 
@@ -207,6 +208,16 @@ const classApi = {
     return resp.data
   },
 
+  getStudentAssignments:async()=>{
+    try{
+      const response= await axiosInstance.get('class/classrooms/student/assignments/')
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
   submitAssignment:async(classId,assignmentId,formData)=>{
     try{
       const response = await axiosInstance.post(
@@ -225,9 +236,31 @@ const classApi = {
     }
   },
 
+
+  unsubmitAssignment: async (classId, assignmentId) => {
+    try{
+    const response = await axiosInstance.delete(`class/classrooms/${classId}/assignments/${assignmentId}/submit/`);
+    return response.data;
+    }
+    catch(error){
+      console.log(error)
+    }
+},
+
+
   FetchStudentSubmission:async(classId,assignmentId,studentId)=>{
     try{
       const response = await axiosInstance.get(`class/classrooms/${classId}/submission/${assignmentId}/${studentId}/`);
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
+  getStudentSubmission:async(classId,assignmentId)=>{
+    try{
+      const response = await axiosInstance.get(`class/classrooms/${classId}/submission/${assignmentId}/`);
       return response.data
     }
     catch(error){
@@ -254,6 +287,8 @@ const classApi = {
       console.log(error)
     }
   },
+
+
 
 };
 

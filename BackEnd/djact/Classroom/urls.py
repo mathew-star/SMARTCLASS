@@ -11,7 +11,8 @@ from .views import(  CreateClassroomView, JoinClassroomView,
     StudentSpecificSubmissionView,
     TeacherTopicsAPIView,
     StudentAssignmentAPIView,
-    FetchClassroomsAPIView
+    FetchClassroomsAPIView,getStudentSubmissionView,
+    getStudentAssignmentsView,
 )
 
 urlpatterns = [
@@ -29,8 +30,10 @@ urlpatterns = [
     path('classrooms/<int:classroom_id>/teacher/assignments/', TeacherAssignmentsAPIView.as_view(), name='teacher-assignments'),
     path('classrooms/<int:classroom_id>/teacher/assignments/<int:assignment_id>/', TeacherAssignmentDetailAPIView.as_view(), name='teacher-assignment-detail'),
     path('classrooms/<int:classroom_id>/student/assignments/', StudentAssignmentsAPIView.as_view(), name='student-assignments'),
+    path('classrooms/student/assignments/',getStudentAssignmentsView.as_view(),name='student-assignments'),
     path('classrooms/<int:classroom_id>/assignments/<int:assignment_id>/',StudentAssignmentAPIView.as_view(), name="students"),
     path('classrooms/<int:class_id>/assignments/<int:assignment_id>/submit/', StudentSubmissionView.as_view(), name='submit-assignment'),
     path('classrooms/<int:class_id>/submission/<int:assignment_id>/<int:student_id>/', StudentSpecificSubmissionView.as_view(), name='submission-detail'),
+    path('classrooms/<int:class_id>/submission/<int:assignment_id>/',getStudentSubmissionView.as_view(),name="get-student_submission"),
     
 ]

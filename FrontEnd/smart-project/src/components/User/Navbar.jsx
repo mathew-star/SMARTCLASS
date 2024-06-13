@@ -13,6 +13,8 @@ import CreateClassModal from './CreateClassModal';
 import classApi from '../../api/classroomApi';
 import JoinClassModal from './JoinClassModal';
 import useClassStore from '@/store/classStore';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Navbar() {
   const logout = useAuthStore((state) => state.logout);
@@ -41,6 +43,7 @@ function Navbar() {
     }
     catch(error){
       console.error(error)
+      toast.error(error.response.data.error);
     }
     
   };
@@ -102,6 +105,19 @@ function Navbar() {
         onClose={() => setIsJoinModalOpen(false)}
         onSave={handleJoinSave}
       />
+
+<ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            />
     </>
   );
 }

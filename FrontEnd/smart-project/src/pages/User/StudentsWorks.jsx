@@ -89,10 +89,15 @@ function StudentsWorks() {
 
   const submitPoints = async () => {
     try {
-      await classApi.SubmitPoints(classId, assignmentId, selectedStudent.id, points);
+      if(points>assignmentDetails.points){
+        toast.error("Submitted point is greater and Total Point")
+      }
+      else{
+        await classApi.SubmitPoints(classId, assignmentId, selectedStudent.id, points);
         toast.success('Points updated!');
-       fetchStudentSubmission(selectedStudent.id);
-       setPoints(studentSubmission.points)
+        fetchStudentSubmission(selectedStudent.id);
+        setPoints(studentSubmission.points)
+      }
       // Reset the points input field
     } catch (error) {
       console.error('Error submitting points:', error);
@@ -166,7 +171,7 @@ function StudentsWorks() {
           </div>
           <div>
           {!studentSubmission && (
-                    <p>No submission</p>
+                    <p className='mt-10 text-xl text-red-200'>No submission made !</p>
                   )}
           </div>
           <div>

@@ -68,6 +68,11 @@ function Classworks() {
     setstudentAssignments(formattedStudentData);
   };
 
+  const getStudentAssignments=async()=>{
+    const data= await classApi.getStudentAssignments();
+    console.log(data)
+  }
+
   useEffect(() => {
     fetchTopics();
     if (isTeacher) {
@@ -75,6 +80,7 @@ function Classworks() {
     }
     if (isStudent) {
       fetchStudentAssignments();
+      getStudentAssignments();
     }
   }, [currentClass]);
 
@@ -93,6 +99,18 @@ function Classworks() {
 
   return (
     <>
+    {isStudent&&(
+      <>
+        <div>
+        <button onClick={()=> navigate(`/c/${classId}/view-student_works`)}
+              className="w-28 ms-10 bg-blue-600 text-white text-lg font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              View Works
+            </button>
+        </div>
+      </>
+
+    )}
       {isTeacher && (
         <>
           <div className='relative flex flex-wrap items-center justify-between'>

@@ -18,6 +18,8 @@ import CreateAssignment from '@/pages/User/CreateAssignment';
 import TeachersLayout from '@/components/Layout/TeachersLayout';
 import StudentsWorks from '@/pages/User/StudentsWorks';
 import EditClassroom from '@/pages/User/EditClassroom';
+import StudentViewWorks from '@/pages/User/StudentViewWorks';
+
 
 
 const HomePage = lazy(() => import('../pages/User/Userhome'));
@@ -48,6 +50,7 @@ const UserRouter = () => {
                   <Route path='/c/:classId/classroom' element={<EditClassroom/>} />
                   <Route path="stream" element={<ClassStream />} />
                   <Route path="works" element={<Classworks />} />
+                  <Route path='view-student_works' element={<StudentViewWorks/>} />
                   <Route path="create-assignment" element={<CreateAssignment />} />
                   <Route path="people" element={<ClassPeople />} />
                   <Route path="grade" element={<ClassGrade />} />
