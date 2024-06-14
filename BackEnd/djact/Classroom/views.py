@@ -5,15 +5,16 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic
+from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic,PrivateComment
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
+from notifications.tasks import send_assignment_notification, send_submission_grade_notification
 
 import logging
 
@@ -282,11 +283,15 @@ class TeacherAssignmentsAPIView(APIView):
 
         if serializer.is_valid():
             assignment = serializer.save()
+
             # Handle file uploads
             for file in request.FILES.getlist('files'):
                 assignment_file = AssignmentFile.objects.create(file=file)
                 assignment.files.add(assignment_file)
             assignment.save()  # Save the assignment after adding the files
+
+            send_assignment_notification.delay(assignment.id)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print("Serializer errors:", serializer.errors)  # Print serializer errors for debugging
@@ -437,6 +442,9 @@ class StudentSpecificSubmissionView(APIView):
         if points is not None:
             submission.points = points
             submission.save()
+
+            send_submission_grade_notification.delay(submission.id)
+
             return Response({'message': 'Points updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Points not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -500,3 +508,48 @@ class FetchClassroomsAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class PrivateCommentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, assignment_id,student_id,teacher_id):
+        print(student_id,teacher_id)
+
+        try:
+            assignment = Assignment.objects.get(id=assignment_id)
+            student = Student.objects.get(id=student_id)
+            teacher= Teacher.objects.get(id=teacher_id)
+            comments = PrivateComment.objects.filter(assignment=assignment,teacher=teacher, student=student).order_by('created_at')
+            serializer = getPrivateCommentSerializer(comments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Student.DoesNotExist:
+            return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, assignment_id,student_id,teacher_id):
+       
+        try:
+            assignment = Assignment.objects.get(id=assignment_id)
+            student = Student.objects.get(id=student_id)
+            
+            data = { 
+                'assignment':assignment.id,
+                'student':student_id,
+                'teacher':teacher_id,
+                'user':request.user.id,
+                'comment':request.data.get('comment')
+
+            }
+
+            serializer = PrivateCommentSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Assignment.DoesNotExist:
+            return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Student.DoesNotExist:
+            return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)

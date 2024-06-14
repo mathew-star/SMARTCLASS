@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile, Topic
+from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile, Topic,PrivateComment
 from users.models import UserAccount
 
 
@@ -165,3 +165,21 @@ class getStudentAssignmentSerializer(serializers.ModelSerializer):
             return submission.points
         except Submission.DoesNotExist:
             return None
+        
+
+
+class PrivateCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PrivateComment
+        fields = '__all__'
+
+
+class getPrivateCommentSerializer(serializers.ModelSerializer):
+    user=UserAccountSerializer()
+
+    class Meta:
+        model = PrivateComment
+        fields = '__all__'
+
+

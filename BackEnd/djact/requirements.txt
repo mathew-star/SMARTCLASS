@@ -22,3 +22,7 @@ uritools==4.0.2
 urllib3==2.1.0
 webencodings==0.5.1
 xhtml2pdf==0.2.14
+celery==5.4.0
+redis==5.0.6
+django-celery-beat== 2.6.0
+django-celery-results==2.5.1

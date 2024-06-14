@@ -6,6 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import { Button } from "@/components/ui/button";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TeacherPrivateComment from '@/components/User/TeacherPrivateComment';
 
 function StudentsWorks() {
   function stringToColor(string){
@@ -106,6 +107,10 @@ function StudentsWorks() {
   };
 
 
+
+
+
+
   return (
     <> 
     {assignmentDetails?
@@ -130,8 +135,8 @@ function StudentsWorks() {
     }
         <hr className='mt-4'/>
     {students&&(
-        <div className='flex flex-row'>
-        <div className=" pl-4 border-r-2 w-[30%] py-6 h-full  ">
+        <div className='flex flex-row '>
+        <div className=" pl-4 border-r-2 w-[30%] py-6  ">
             {/* Display list of students */}
             <h2 className="text-xl font-bold">Students</h2>
             <ul>
@@ -164,19 +169,18 @@ function StudentsWorks() {
                   ))}
             </ul>
           </div>
-    
-          <div className='p-8'>
-                  
+
+
+        <div className='flex flex-col flex-1'>
             
-          </div>
           <div>
           {!studentSubmission && (
-                    <p className='mt-10 text-xl text-red-200'>No submission made !</p>
+                    <p className='mt-10 ms-5 text-xl text-red-200'>No submission made !</p>
                   )}
           </div>
           <div>
             {selectedStudent && studentSubmission && (
-            <div>
+            <div className='w-full p-4'>
               <div className='flex flex-row  items-center p-4'>
     
               <div className='me-10'>
@@ -211,16 +215,32 @@ function StudentsWorks() {
                                 </div>
                             ))}
                 </div>
+
+                
               
             </div>
           )}
-          </div>
-    
-        </div>
+          
+                  
+                  </div>
 
+                  {selectedStudent&&(
+            <>
+            <hr className='mt-20'/>
+            <div className=' p-6'>
+  
+              <TeacherPrivateComment Student_id={selectedStudent.id} assignmentId={assignmentId} assignment={assignmentDetails}/>
+  
+            </div>
+            </>
+          )}
+            
+                </div>
+          </div>       
+        
 
     )}
-
+    
     <ToastContainer
                 position="top-right"
                 autoClose={5000}

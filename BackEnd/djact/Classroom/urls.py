@@ -13,6 +13,7 @@ from .views import(  CreateClassroomView, JoinClassroomView,
     StudentAssignmentAPIView,
     FetchClassroomsAPIView,getStudentSubmissionView,
     getStudentAssignmentsView,
+    PrivateCommentView,
 )
 
 urlpatterns = [
@@ -35,5 +36,7 @@ urlpatterns = [
     path('classrooms/<int:class_id>/assignments/<int:assignment_id>/submit/', StudentSubmissionView.as_view(), name='submit-assignment'),
     path('classrooms/<int:class_id>/submission/<int:assignment_id>/<int:student_id>/', StudentSpecificSubmissionView.as_view(), name='submission-detail'),
     path('classrooms/<int:class_id>/submission/<int:assignment_id>/',getStudentSubmissionView.as_view(),name="get-student_submission"),
+    path('classrooms/private-comment/<int:assignment_id>/<int:student_id>/<int:teacher_id>/',PrivateCommentView.as_view(),name='private-comment'),
+
     
 ]

@@ -7,6 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from '@/utils/constants';
 import { MdAssignment, MdClose } from "react-icons/md";
 import useAuthStore from '@/store/authStore';
+import PrivateCommentSection from '@/components/User/PrivateCommentSection';
+import Loader from '@/components/ui/Loader';
 
 function StudentAssignmentDetails() {
     const { classId, assignmentId } = useParams();
@@ -14,7 +16,7 @@ function StudentAssignmentDetails() {
     const [assignment, setAssignment] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const current_user = localStorage.getItem('User')
+    const current_user = JSON.parse(localStorage.getItem('User'))
     
 
 
@@ -41,8 +43,11 @@ function StudentAssignmentDetails() {
           setSubmission(submission);
           setPoints(submission.points)
           setSubmissionFiles(submission.files || []);
+          setLoading(false);
+
         } catch (error) {
           console.error('Error fetching student submission:', error);
+          setLoading(false);
         }
       };
 
@@ -68,7 +73,7 @@ function StudentAssignmentDetails() {
 
         fetchAssignmentDetails();
         fetchStudentSubmission();
-    }, [classId, assignmentId]);
+    }, []);
 
 
 
@@ -113,8 +118,13 @@ function StudentAssignmentDetails() {
             toast.error('Failed to unsubmit assignment.');
         }
     };
+    
 
     console.log(submissionFiles)
+
+    if (loading) {
+        return <div>Loading...</div>;;
+    }
 
     return (
         <>
@@ -154,6 +164,7 @@ function StudentAssignmentDetails() {
 
                     <div>
                         <p className='text-2xl mt-8'>Private Comments</p>
+                        <PrivateCommentSection assignmentId={assignmentId} Teacher_id={assignment?.created_by.id} assignment={assignment} />
                     </div>
                 </div>
 

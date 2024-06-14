@@ -288,6 +288,28 @@ const classApi = {
     }
   },
 
+  FetchPrivateComments:async(assignmentId,student_id,teacher_id)=>{
+    console.log('jkjkj')
+    console.log(teacher_id)
+    try{
+      const response= await axiosInstance.get(`class/classrooms/private-comment/${assignmentId}/${student_id}/${teacher_id}/`);
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
+  PostPrivateComments:async(assignmentId,student_id,teacher_id,data)=>{
+    try{
+      const response= await axiosInstance.post(`class/classrooms/private-comment/${assignmentId}/${student_id}/${teacher_id}/`,data);
+      return response.data
+    }
+    catch(error){
+      console.log(error)
+    }
+  },
+
 
 
 };
