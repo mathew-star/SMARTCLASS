@@ -1,5 +1,5 @@
 import useAuthStore from '@/store/authStore';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoMdAdd } from "react-icons/io";
@@ -15,16 +15,27 @@ import JoinClassModal from './JoinClassModal';
 import useClassStore from '@/store/classStore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IoNotifications } from "react-icons/io5";
+import useNotificationStore from '@/store/notificationStore';
+
 
 function Navbar() {
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
   const { fetchTeachingClasses, fetchEnrolledClasses } = useClassStore();
   const navigate = useNavigate();
+  const notifications = useNotificationStore((state) => state.notifications);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const markAllAsRead = useNotificationStore((state) => state.markAllAsRead);
+  const fetchNotifications = useNotificationStore((state) => state.fetchNotifications);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   const handleLogout = () => {
     logout();
@@ -62,6 +73,12 @@ function Navbar() {
       <div className="bg-[#1C1D2B] text-white flex justify-between items-center p-4 rounded-b-lg shadow-lg">
         <div className="text-3xl font-bold">SMARTCLASS</div>
         <div className="flex items-center space-x-4">
+        <div className='relative p-1'>
+          <div className='border bg-red-700 rounded-full absolute top-0 right-0 w-6 h-6 flex justify-center items-center'>
+            <p>{notifications.length}</p>
+          </div>
+        <IoNotifications onClick={()=>navigate('/notification')}  className='w-7 h-7 me-3 cursor-pointer'/>
+        </div>
           <div className="relative">
             <IoMdAdd className='text-white w-8 h-8 me-4 cursor-pointer' onClick={toggleDropdown} />
             {dropdownOpen && (

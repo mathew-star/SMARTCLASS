@@ -28,6 +28,7 @@ const UserLogin = lazy(() => import('../pages/User/UserLogin'));
 const UserSignUp = lazy(() => import('../pages/User/UserRegister'));
 const AssignmentDetails = lazy(()=> import('../pages/User/AssignmentDetails'));
 const StudentAssignmentDetails = lazy(()=> import('@/pages/User/StudentAssignmentDetails'))
+const UserNotificationPage  = lazy(()=>import('@/pages/User/UserNotification'))
 
 const UserRouter = () => {
   return (
@@ -45,7 +46,7 @@ const UserRouter = () => {
             <Route element={<UserLayout />}>
               <Route path="/h" element={<HomePage />} />
               <Route path="/profile" element={<UserProfile />} />
-
+              <Route path='/notification' element={<UserNotificationPage/>}/>
               <Route path='/c/:classId' element={<ClassLayout />}>
                   <Route path='/c/:classId/classroom' element={<EditClassroom/>} />
                   <Route path="stream" element={<ClassStream />} />

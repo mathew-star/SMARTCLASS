@@ -14,11 +14,9 @@ class NotificationListView(APIView):
 
     def get(self, request):
         user = request.user
-        notifications = Notification.objects.filter(recipient=user, is_read=False).order_by('-created_at')
+        notifications = Notification.objects.filter(recipient=user, read=False).order_by('-timestamp')
         serialized_notifications = NotificationSerializer(notifications, many=True)
         
-        # Mark all fetched notifications as read
-        notifications.update(is_read=True)
         
         return Response(serialized_notifications.data, status=status.HTTP_200_OK)
     
@@ -29,7 +27,10 @@ class MarkAllReadView(APIView):
 
     def post(self, request):
         user = request.user
-        notifications = Notification.objects.filter(recipient=user, is_read=False)
-        notifications.update(is_read=True)
+        notifications = Notification.objects.filter(recipient=user, read=False)
+        notifications.update(read=True)
         
+        read_notifications = Notification.objects.filter(recipient=user, read=True)
+        read_notifications.delete()
+
         return Response({'message': 'All notifications marked as read'}, status=status.HTTP_200_OK)

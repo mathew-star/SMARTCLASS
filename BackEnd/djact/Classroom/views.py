@@ -14,7 +14,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
-from notifications.tasks import send_assignment_notification, send_submission_grade_notification
+from notifications.tasks import send_assignment_notification, send_submission_grade_notification,send_submission_notification
 
 import logging
 
@@ -374,7 +374,7 @@ class StudentSubmissionView(APIView):
 
         submission.status = 'submitted'
         submission.save()
-
+        send_submission_notification.delay(assignment_id, student.id)
         serializer = SubmissionSerializer(submission)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
