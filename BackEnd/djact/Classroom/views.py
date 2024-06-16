@@ -7,9 +7,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic,PrivateComment
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer,LeaderboardSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
+from django.db.models import Count, Case, When, Sum, Q,IntegerField
+from django.db import models
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -553,3 +555,23 @@ class PrivateCommentView(APIView):
             return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
         except Student.DoesNotExist:
             return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+class LeaderboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, class_id):
+        students = Student.objects.filter(classroom_id=class_id).annotate(
+            total_assignments=Count('assignment', distinct=True),
+            completed_assignments=Count(Case(
+                When(submission__status='submitted', then='submission__assignment'),
+                output_field=IntegerField(),
+            ), distinct=True),
+            total_points=Sum('submission__points', filter=models.Q(submission__status='submitted'), distinct=True),
+        )
+        serializer = LeaderboardSerializer(students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

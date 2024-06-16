@@ -183,3 +183,16 @@ class getPrivateCommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+class LeaderboardSerializer(serializers.ModelSerializer):
+    total_points = serializers.IntegerField()
+    completed_assignments = serializers.IntegerField()
+    total_assignments = serializers.IntegerField()
+    user=UserAccountSerializer()
+
+    class Meta:
+        model = Student
+        fields = ['user', 'total_points', 'completed_assignments', 'total_assignments']
+
+
