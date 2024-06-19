@@ -7,10 +7,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic,PrivateComment
 from .permissions import IsTeacher
-from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer,LeaderboardSerializer
+from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer,LeaderboardSerializer,ClassroomAnalyticsSerializer
 from django.contrib.auth import authenticate, login, logout
 from datetime import timedelta
-from django.db.models import Count, Case, When, Sum, Q,IntegerField
+from django.db.models import Count, Case, When, Sum, Q,IntegerField,Avg
 from django.db import models
 from django.conf import settings
 from django.shortcuts import get_object_or_404
@@ -212,19 +212,25 @@ class RemoveStudentsView(APIView):
 
     
 
-class AnnouncementView(APIView):
-    permission_classes=[IsAuthenticated,IsTeacher]
 
-    def post(self,request,class_id):
+class AnnouncementView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, class_id):
         user = request.user
+        if not IsTeacher().has_permission(request, self):
+            return Response({'error': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+
         announcement = request.data.get('announcement')
         if not announcement:
             return Response({'error': 'Announcement text is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             classroom = Classroom.objects.get(id=class_id)
         except Classroom.DoesNotExist:
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
-        announcement_object=Announcements.objects.create(user=user,classroom=classroom,announcement=announcement)
+        
+        announcement_object = Announcements.objects.create(user=user, classroom=classroom, announcement=announcement)
         serializer = announcementSerializer(announcement_object)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -233,10 +239,11 @@ class AnnouncementView(APIView):
             classroom = Classroom.objects.get(id=class_id)
         except Classroom.DoesNotExist:
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
-
+        
         announcements = Announcements.objects.filter(classroom=classroom).order_by('-created_at')
         serializer = announcementSerializer(announcements, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
 
 class TeacherTopicsAPIView(generics.ListCreateAPIView):
@@ -575,3 +582,40 @@ class LeaderboardView(APIView):
         serializer = LeaderboardSerializer(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+
+class ClassroomPerformanceAnalyticsView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, class_id):
+        try:
+            classroom = Classroom.objects.get(id=class_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=404)
+
+        # Calculate the total number of students
+        students_count = classroom.student_set.count()
+
+        # Calculate the total number of assignments
+        assignments_count = classroom.assignment_set.count()
+
+        # Calculate the average grade for the classroom
+        average_grade = Submission.objects.filter(
+            assignment__classroom=classroom
+        ).aggregate(average_grade=Avg('points'))['average_grade']
+
+        # Calculate the assignment completion rate
+        total_submissions = Submission.objects.filter(assignment__classroom=classroom).count()
+        total_assignments = assignments_count * students_count
+        completion_rate = (total_submissions / total_assignments) * 100 if total_assignments > 0 else 0
+
+        data = {
+            'students_count': students_count,
+            'assignments_count': assignments_count,
+            'average_grade': average_grade or 0,
+            'completion_rate': completion_rate,
+        }
+
+        serializer = ClassroomAnalyticsSerializer(data)
+        return Response(serializer.data)

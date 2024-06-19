@@ -196,3 +196,12 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         fields = ['user', 'total_points', 'completed_assignments', 'total_assignments']
 
 
+
+
+class ClassroomAnalyticsSerializer(serializers.Serializer):
+    students_count = serializers.IntegerField()
+    assignments_count = serializers.IntegerField()
+    average_grade = serializers.FloatField()
+    completion_rate = serializers.FloatField()
+
+

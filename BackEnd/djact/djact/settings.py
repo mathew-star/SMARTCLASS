@@ -18,7 +18,7 @@ from celery.schedules import crontab
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -53,13 +53,15 @@ CELERY_BEAT_SCHEDULE = {
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # Make sure 'corsheaders' is included here
+    'django_extensions',
+    'corsheaders', 
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'users',
@@ -68,11 +70,14 @@ INSTALLED_APPS = [
     'django_celery_results',
     'notifications',
     'celery',
+    'chat',
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,6 +87,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'djact.urls'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEMPLATES = [
     {
@@ -100,6 +107,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'djact.wsgi.application'
+
+ASGI_APPLICATION = 'djact.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 
 LOGGING = {
@@ -197,9 +216,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
-MEDIA_URL= '/media/images/'
+MEDIA_URL= '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR ,'media')
 
 # Default primary key field type
