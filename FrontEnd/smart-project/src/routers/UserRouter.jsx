@@ -22,6 +22,7 @@ import StudentViewWorks from '@/pages/User/StudentViewWorks';
 
 
 
+
 const HomePage = lazy(() => import('../pages/User/Userhome'));
 const UserProfile = lazy(() => import('../pages/User/UserProfile'));
 const UserLogin = lazy(() => import('../pages/User/UserLogin'));
@@ -29,6 +30,7 @@ const UserSignUp = lazy(() => import('../pages/User/UserRegister'));
 const AssignmentDetails = lazy(()=> import('../pages/User/AssignmentDetails'));
 const StudentAssignmentDetails = lazy(()=> import('@/pages/User/StudentAssignmentDetails'))
 const UserNotificationPage  = lazy(()=>import('@/pages/User/UserNotification'))
+const DisscussionPage= lazy(()=> import('@/pages/User/Disscuss'))
 
 const UserRouter = () => {
   return (
@@ -51,6 +53,7 @@ const UserRouter = () => {
                   <Route path='/c/:classId/classroom' element={<EditClassroom/>} />
                   <Route path="stream" element={<ClassStream />} />
                   <Route path="works" element={<Classworks />} />
+                  <Route path="discussion" element={<DisscussionPage />} />
                   <Route path='view-student_works' element={<StudentViewWorks/>} />
                   <Route path="create-assignment" element={<CreateAssignment />} />
                   <Route path="people" element={<ClassPeople />} />

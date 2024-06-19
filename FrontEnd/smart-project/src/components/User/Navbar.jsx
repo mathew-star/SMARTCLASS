@@ -35,7 +35,8 @@ function Navbar() {
 
   useEffect(() => {
     fetchNotifications();
-  }, [fetchNotifications]);
+  }, []);
+
 
   const handleLogout = () => {
     logout();
@@ -74,9 +75,13 @@ function Navbar() {
         <div className="text-3xl font-bold">SMARTCLASS</div>
         <div className="flex items-center space-x-4">
         <div className='relative p-1'>
-          <div className='border bg-red-700 rounded-full absolute top-0 right-0 w-6 h-6 flex justify-center items-center'>
-            <p>{notifications.length}</p>
-          </div>
+          {notifications &&(
+            <>
+            <div className='border bg-red-700 rounded-full absolute top-0 right-0 w-6 h-6 flex justify-center items-center'>
+              <p>{notifications.length}</p>
+            </div>
+            </>
+          )}
         <IoNotifications onClick={()=>navigate('/notification')}  className='w-7 h-7 me-3 cursor-pointer'/>
         </div>
           <div className="relative">

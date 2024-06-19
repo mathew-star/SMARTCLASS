@@ -14,6 +14,15 @@ function AdminClassTabs() {
       >
         Members
       </NavLink>
+
+      <NavLink
+        to={`/admin/h/c/${classId}/analytics`}
+        className={({ isActive }) =>
+          isActive ? "py-2 px-4 border-b-2 border-green-500 text-white" : "py-2 px-4 text-white"
+        }
+      >
+       Analytics
+      </NavLink>
       </div>
     </>
   )

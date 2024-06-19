@@ -27,16 +27,16 @@ function Userhome() {
   }, [current_user]);
 
 
-  console.log("Home..")
+
 
   
-
-
 
   
   return (
     <>
-      {teachingClasses.length > 0 && (
+      {teachingClasses && (
+          <>
+            {teachingClasses.length > 0 && (
         <div>
           <h1 className="text-3xl text-white mb-4">Teaching Classes</h1>
           <div className="flex flex-wrap">
@@ -46,8 +46,14 @@ function Userhome() {
           </div>
         </div>
       )}
+          </>
 
-      {enrolledClasses.length >0 &&(
+      )}
+
+      
+      {enrolledClasses && (
+        <>
+            {enrolledClasses.length >0 &&(
         <div>
           <h1 className="text-3xl text-white mt-8 mb-4">Enrolled Classes</h1>
               <div className="flex flex-wrap">
@@ -56,6 +62,8 @@ function Userhome() {
                 ))}
               </div>
         </div>
+      )}
+        </>
       )}
 
               

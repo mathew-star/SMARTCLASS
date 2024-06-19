@@ -34,16 +34,25 @@ const ClassroomTabs = () => {
       >
         People
       </NavLink>
-      {isTeacher && (
+
+      <NavLink
+        to={`/c/${classId}/discussion`}
+        className={({ isActive }) =>
+          isActive ? "py-2 px-4 border-b-2 border-green-500 text-white" : "py-2 px-4 text-white"
+        }
+      >
+        Discuss
+      </NavLink>
+
         <NavLink
         to={`/c/${classId}/grade`}
         className={({ isActive }) =>
           isActive ? "py-2 px-4 border-b-2 border-green-500 text-white" : "py-2 px-4 text-white"
         }
       >
-        Grades
+        Leaderboard
       </NavLink>
-      )}
+
     </div>
   );
 };

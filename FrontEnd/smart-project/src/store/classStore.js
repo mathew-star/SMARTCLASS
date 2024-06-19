@@ -1,13 +1,25 @@
 import {create} from 'zustand';
 import classApi from '../api/classroomApi';
 
+
 const useClassStore = create((set)=>({
     currentClass:null,
     teachingClasses: [],
     enrolledClasses: [],
     userRoleInClass: null,
     classMembers: { teacher: null, students: [] },
+    leaderboard: [],
 
+
+    
+  fetchUpdateLeaderboard: async (classId) => {
+    try {
+      const leaderboard = await classApi.fetchLeaderboard(classId);
+      set({ leaderboard });
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+    }
+  },
 
 
     fetchTeachingClasses: async () => {

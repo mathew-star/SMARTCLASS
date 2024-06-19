@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoSidebarCollapse } from "react-icons/go";
 import { FaHome, FaChalkboardTeacher, FaBookOpen, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { SiStudyverse } from "react-icons/si";
+import useClassStore from "@/store/classStore";
 
 const HomeSidebar = () => {
+    const { teachingClasses, enrolledClasses, fetchTeachingClasses, fetchEnrolledClasses,fetchClassMembers   } = useClassStore();
+    const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
+    const fetchClassroomById = useClassStore((state) => state.fetchClassroomById);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isTeachingOpen, setIsTeachingOpen] = useState(false);
     const [isEnrolledOpen, setIsEnrolledOpen] = useState(false);
+    const current_user = localStorage.getItem("User");
+
+    useEffect(() => {
+        fetchTeachingClasses();
+        fetchEnrolledClasses();
+        fetchClassMembers();
+    
+      }, [current_user]);
+    
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -20,6 +33,7 @@ const HomeSidebar = () => {
     const toggleEnrolledDropdown = () => {
         setIsEnrolledOpen(!isEnrolledOpen);
     };
+
 
     return (
         <div className="flex">
@@ -55,11 +69,26 @@ const HomeSidebar = () => {
                             {isTeachingOpen ? <FaChevronUp /> : <FaChevronDown />}
                         </div>
                         {isTeachingOpen && isSidebarOpen && (
-                            <div className="ml-6 mt-2 space-y-2">
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class 1</div>
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class 2</div>
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class 3</div>
-                            </div>
+                            <>
+                            {teachingClasses && (
+                                <>
+                                        {teachingClasses.length>0 && (
+                                <>
+                                    <div className="ml-6 mt-2 space-y-2">
+                                    {teachingClasses.map((classroom) => (
+                                        <div  className="cursor-pointer p-2 hover:bg-[#39425A] rounded">
+                                            <p className="text-white text-xl">{classroom.title}</p>
+                                        </div>
+                                        ))}
+                                        
+                                    </div>
+                                </>
+                            )}
+                                
+                                
+                                </>
+                            )}
+                            </>
                         )}
                     </li>
 
@@ -72,11 +101,22 @@ const HomeSidebar = () => {
                             {isEnrolledOpen ? <FaChevronUp /> : <FaChevronDown />}
                         </div>
                         {isEnrolledOpen && isSidebarOpen && (
-                            <div className="ml-6 mt-2 space-y-2">
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class A</div>
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class B</div>
-                                <div className="cursor-pointer p-2 hover:bg-[#39425A] rounded">Class C</div>
-                            </div>
+                            <>
+                            {enrolledClasses && (
+                                <>
+                                        {enrolledClasses.length>0 && (
+                                <div className="ml-6 mt-2 space-y-2">
+                                    {enrolledClasses.map((classroom) => (
+                                        <div  className="cursor-pointer p-2 hover:bg-[#39425A] rounded">
+                                            <p className="text-white text-xl">{classroom.title}</p>
+                                        </div>
+                                        ))}
+                                </div>
+                            )}
+                                </>
+
+                            )}
+                            </>
                         )}
                     </li>
                 </ul>

@@ -310,7 +310,55 @@ const classApi = {
     }
   },
 
+  fetchAnnouncements : async (classId) => {
+    try {
+        const response = await axiosInstance.get(`class/classrooms/${classId}/announcements/`);
+        return response.data
+    } catch (error) {
+        console.error('Error fetching announcements:', error);
+    }
+},
+ 
+  PostAnnouncement:async(classId, announcement)=>{
+    try{
+      const response=await axiosInstance.post(`class/classrooms/${classId}/announcements/`,{ announcement: announcement })
+      return response.data
+    }
+    catch(error){
+      console.error('Error posting annoucement',error)
+      throw error
+    }
+  },
+  fetchLeaderboard: async (classId) => {
+    try {
+      const response = await axiosInstance.get(`class/classrooms/${classId}/leaderboard/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      throw error; // Ensure the error is thrown so it can be caught by the calling function
+    }
+  },
 
+  fetchMessages:async(classId)=>{
+    try{
+      const response= await axiosInstance.get(`chat/messages/${classId}/`)
+      return response.data
+    }
+    catch(error){
+      console.error(error)
+      
+    }
+  },
+
+  fetchClassroomAnalytics: async (classId) => {
+    try {
+        const response = await axiosInstance.get(`class/classrooms/${classId}/analytics/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching classroom analytics:', error);
+        throw error;
+    }
+},
 
 };
 

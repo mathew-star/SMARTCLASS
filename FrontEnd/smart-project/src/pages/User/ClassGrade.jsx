@@ -1,9 +1,10 @@
 import React from 'react'
+import Leaderboard from './Leaderboard'
 
 function ClassGrade() {
   return (
     <div>
-      <h1>grade</h1>
+      <Leaderboard/>
     </div>
   )
 }

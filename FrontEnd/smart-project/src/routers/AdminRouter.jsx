@@ -9,9 +9,11 @@ import AdminClassroomLayout from '@/components/Layout/AdminClassroomLayout';
 import Classrooms from '@/pages/Admin/Classrooms';
 import AdminClassCards from '@/components/Admin/AdminClassCards';
 import AdminClassMembers from '@/pages/Admin/AdminClassMembers';
+import AdminDashboard from '@/pages/Admin/AdminDashboard';
 
 const AdminHomePage = lazy(() => import('../pages/Admin/AdminHome'));
 const AdminLogin = lazy(() => import('../pages/Admin/AdminLogin'));
+const ClassroomAnalyticsPage= lazy(()=> import('@/pages/Admin/ClassroomAnalytics'))
 
 function AdminRouter() {
   return (
@@ -22,12 +24,13 @@ function AdminRouter() {
   
           <Route element={<AdminPrivateRoute/>}>
             <Route path="/h" element={<AdminHomePage />} >
+                <Route path='dashboard' element={<AdminDashboard/>} />
                 <Route path="users" element={<Users />} />
                 <Route path="profile" element={<UserProfile />} />
                 <Route path='classrooms' element={<Classrooms/>} />
                 <Route path='c/:classId' element={<AdminClassroomLayout/>}>
                     <Route path='members' element={<AdminClassMembers/> } />
-
+                    <Route path='analytics' element={<ClassroomAnalyticsPage />} />
                 </Route>
             </Route>
 

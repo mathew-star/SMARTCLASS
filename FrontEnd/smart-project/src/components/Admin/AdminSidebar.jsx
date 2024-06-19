@@ -7,6 +7,7 @@ import { BASE_URL } from '@/utils/constants';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { deepOrange, deepPurple } from '@mui/material/colors';
+import { SiGoogleclassroom } from 'react-icons/si';
 
 const AdminSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -62,7 +63,7 @@ const AdminSidebar = () => {
           </li>
 
           <li className="flex rounded-md p-2 mt-4 cursor-pointer hover:bg-[#39425A] text-gray-300 text-sm items-center gap-x-4">
-            <FaUsers className="w-8 h-8"/>
+          <SiGoogleclassroom  className='w-8 h-8'/>
             <Link to={'/admin/h/classrooms'} className={`${!isSidebarOpen && "hidden"} origin-left text-2xl duration-200`}>
               Classrooms
             </Link>
