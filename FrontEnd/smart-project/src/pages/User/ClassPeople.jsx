@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import useClassStore from '@/store/classStore';
 import { BASE_URL } from '@/utils/constants';
 import Avatar from '@mui/material/Avatar';
+import { useParams } from 'react-router-dom';
 
 
 function ClassPeople() {
-
+  const {classId}=useParams()
   function stringToColor(string){
       let hash = 0;
       let i;
@@ -44,12 +45,13 @@ function ClassPeople() {
 
 
 
-  const { currentClass, classMembers, userRoleInClass, fetchClassMembers, removeStudents } = useClassStore((state) => ({
+  const { currentClass, classMembers, userRoleInClass, fetchClassMembers, removeStudents,fetchUserRoleInClass } = useClassStore((state) => ({
     currentClass: state.currentClass,
     classMembers: state.classMembers,
     userRoleInClass: state.userRoleInClass,
     fetchClassMembers: state.fetchClassMembers,
     removeStudents: state.removeStudents,
+    fetchUserRoleInClass:state.fetchUserRoleInClass,
   }));
 
   console.log(classMembers.students);
@@ -60,7 +62,12 @@ function ClassPeople() {
     if (currentClass) {
       fetchClassMembers(currentClass.id);
     }
+    fetchUserRoleInClass(classId);
   }, [currentClass, fetchClassMembers]);
+
+  if (!userRoleInClass || !currentClass) {
+    return <Loader />;
+  }
 
   const handleSelectStudent = (studentId) => {
     setSelectedStudents((prev) =>

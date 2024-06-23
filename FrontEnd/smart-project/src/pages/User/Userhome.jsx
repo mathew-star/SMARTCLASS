@@ -6,6 +6,7 @@ import Sidebar from '@/components/User/HomeSidebar';
 import ClassCard from '@/components/User/ClassCard';
 import classApi from '../../api/classroomApi';
 import useClassStore from '../../store/classStore'
+import useNotificationStore from '@/store/notificationStore';
 
 
 
@@ -16,6 +17,7 @@ function Userhome() {
   const user = useAuthStore((state) => state.user);
   const current_user = localStorage.getItem("User");
   const { teachingClasses, enrolledClasses, fetchTeachingClasses, fetchEnrolledClasses,fetchClassMembers   } = useClassStore();
+  const fetchNotifications = useNotificationStore((state) => state.fetchNotifications);
 
   useEffect(() => {
     refresh();
@@ -23,6 +25,7 @@ function Userhome() {
     fetchTeachingClasses();
     fetchEnrolledClasses();
     fetchClassMembers();
+    fetchNotifications()
 
   }, [current_user]);
 

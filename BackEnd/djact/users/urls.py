@@ -21,7 +21,7 @@ urlpatterns = [
     path('block-user/<int:user_id>/', BlockUserView.as_view(), name='block-user'),
     path('unblock-user/<int:user_id>/', UnblockUserView.as_view(), name='unblock-user'),
 
-    path('register/', RegisterView.as_view()),
+    path('register/', RegisterView.as_view(),name="register"),
     path('me/', RetrieveUserView.as_view()),
     path('otp-request/', OTPRequestView.as_view(), name='otp-request'),
     path('otp-verify/', OTPVerifyView.as_view(), name='otp-verify'),

@@ -57,8 +57,8 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
   return (
     <>
     {comments && (
-            <div className="comment-section mt-6">
-            <ul className="space-y-4">
+            <div className="comment-section mt-6 max-h-96 overflow-y-auto">
+            <ul className=" space-y-4">
               {comments&&(
                   <div>
                   {comments.map((comment) => (
@@ -80,7 +80,7 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
       
                         
                         <p className='ms-12 text-lg'>{comment.comment}</p>
-                        <p className="text-gray-500 text-sm">{new Date(comment.created_at).toLocaleString()}</p>
+                        <p className="text-gray-500 text-sm ms-12">{new Date(comment.created_at).toLocaleString()}</p>
                       </li>
                     ))}
                   </div>

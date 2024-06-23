@@ -18,7 +18,7 @@ function ClassLayout() {
       fetchClassroomById(classId);
       fetchUserRoleInClass(classId);
       fetchClassMembers(classId);
-    }, [fetchClassroomById,classId, fetchUserRoleInClass, fetchClassMembers]);
+    }, [classId, fetchClassroomById, fetchUserRoleInClass, fetchClassMembers]);
   
   
 

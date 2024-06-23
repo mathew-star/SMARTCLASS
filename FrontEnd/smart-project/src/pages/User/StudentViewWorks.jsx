@@ -48,7 +48,9 @@ function StudentViewWorks() {
 
     return (
         <div className='flex justify-center items-center'>
-            <ViewStudenworksList assignments={assignments}/>
+            {assignments&&(
+                <ViewStudenworksList assignments={assignments}/>
+            )}
         </div>
     );
 }

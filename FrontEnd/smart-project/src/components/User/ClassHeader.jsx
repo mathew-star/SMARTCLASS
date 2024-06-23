@@ -5,18 +5,27 @@ import { IoMdSettings } from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../ui/Loader';
 
 function ClassHeader() {
   const {classId}=useParams()
   const fetchClassroomById = useClassStore((state)=> state.fetchClassroomById)
+  const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
+
   useEffect(()=>{
+    console.log("useEffect")
     fetchClassroomById(classId);
-  },[])
+    fetchUserRoleInClass(classId);
+  },[classId])
 
 
     const currentClass = useClassStore((state) => state.currentClass);
     const userRoleInClass = useClassStore((state) => state.userRoleInClass);
     const navigate=useNavigate()
+
+    if (!currentClass || !userRoleInClass) {
+      return <Loader/>; // Or a loading spinner
+    }
 
     const isTeacher= userRoleInClass.role==='teacher'? true:false;
 
@@ -29,7 +38,7 @@ function ClassHeader() {
         toast.error('Failed to copy class code.');
       });
     };
-    console.log(currentClass)
+
 
   return (
     <>

@@ -80,7 +80,7 @@ function StudentsWorks() {
     try {
       const submission = await classApi.FetchStudentSubmission(classId, assignmentId, studentId);
       setStudentSubmission(submission);
-      setPoints(studentSubmission.points)
+      setPoints(submission.points)
     } catch (error) {
       console.error('Error fetching student submission:', error);
     }
@@ -97,7 +97,6 @@ function StudentsWorks() {
         await classApi.SubmitPoints(classId, assignmentId, selectedStudent.id, points);
         toast.success('Points updated!');
         fetchStudentSubmission(selectedStudent.id);
-        setPoints(studentSubmission.points)
       }
       // Reset the points input field
     } catch (error) {

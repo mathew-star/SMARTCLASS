@@ -47,7 +47,7 @@ const classApi = {
     fetchUserRoleInClass: async (classId) => {
         try {
             const response = await axiosInstance.get(`/class/user-role/${classId}/`);
-            console.log(response.data);
+            
             return response.data;
         } catch (error) {
             console.error('Failed to fetch user role in class:', error);

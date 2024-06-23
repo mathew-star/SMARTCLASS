@@ -51,7 +51,7 @@ const AdminSidebar = () => {
         <ul className="pt-6">
           <li className="flex rounded-md p-2 cursor-pointer hover:bg-[#39425A] text-gray-300 text-sm items-center gap-x-4">
             <FaHome className="w-8 h-8"/>
-            <Link to={'/admin/h'} className={`${!isSidebarOpen && "hidden"} origin-left text-2xl duration-200`}>
+            <Link to={'/admin/h/dashboard'} className={`${!isSidebarOpen && "hidden"} origin-left text-2xl duration-200`}>
               Dashboard
             </Link>
           </li>

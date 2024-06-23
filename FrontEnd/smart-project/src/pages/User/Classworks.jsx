@@ -3,37 +3,39 @@ import CreateTopicModal from '@/components/User/CreateTopicModal';
 import StudentAssignmentList from '@/components/User/StudentAssignmentList';
 import TeachersAssignmentList from '@/components/User/TeachersAssignmentList';
 import TopicDropdown from '@/components/User/TopicDropdown';
+import Loader from '@/components/ui/Loader';
 import useClassStore from '@/store/classStore';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { IoMdAdd } from "react-icons/io";
 import { useNavigate, useParams } from 'react-router-dom';
 
 function Classworks() {
-  const userRoleInClass = useClassStore((state) => state.userRoleInClass);
+  const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
+  const fetchClassroomById = useClassStore((state) => state.fetchClassroomById);
 
-  const isTeacher = userRoleInClass.role === 'teacher' ? true : false;
-  const isStudent = userRoleInClass.role === 'student' ? true : false;
+  const { classId } = useParams();
+  const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
-  const { classId } = useParams();
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [topics, setTopics] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [assignments, setAssignments] = useState([]);
+  const [studentAssignments, setStudentAssignments] = useState([]);
 
-  const [studentAssignments, setstudentAssignments] = useState([]);
-
-  const { currentClass } = useClassStore((state) => ({
-    currentClass: state.currentClass,
-  }));
+  const currentClass = useClassStore((state) => state.currentClass);
+  const userRoleInClass = useClassStore((state) => state.userRoleInClass);
 
   const fetchTopics = async () => {
-    const data = await classApi.fetchTopic(currentClass.id);
-    setTopics(data.map(topic => ({ value: topic.id, label: topic.title })));
+    try {
+      const data = await classApi.fetchTopic(classId);
+      setTopics(data.map(topic => ({ value: topic.id, label: topic.title })));
+    } catch (error) {
+      console.error('Failed to fetch topics:', error);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -43,46 +45,56 @@ function Classworks() {
   };
 
   const fetchAssignments = async () => {
-    if (currentClass) {
-      const data = await classApi.fetchAssignments(currentClass.id);
+    try {
+      const data = await classApi.fetchAssignments(classId);
       const formattedData = data.map(assignment => ({
         ...assignment,
-        formatted_dates: { 
+        formatted_dates: {
           created_at: formatDate(assignment.created_at),
           due_date: assignment.due_date ? formatDate(assignment.due_date) : '',
-        }
+        },
       }));
       setAssignments(formattedData);
+    } catch (error) {
+      console.error('Failed to fetch assignments:', error);
     }
   };
 
   const fetchStudentAssignments = async () => {
-    const data = await classApi.fetchStudentAssignments(currentClass.id);
-    const formattedStudentData = data.map(assignment => ({
-      ...assignment,
-      formatted_dates: { 
-        created_at: formatDate(assignment.created_at),
-        due_date: assignment.due_date ? formatDate(assignment.due_date) : '',
-      }
-    }));
-    setstudentAssignments(formattedStudentData);
+    try {
+      const data = await classApi.fetchStudentAssignments(classId);
+      const formattedData = data.map(assignment => ({
+        ...assignment,
+        formatted_dates: {
+          created_at: formatDate(assignment.created_at),
+          due_date: assignment.due_date ? formatDate(assignment.due_date) : '',
+        },
+      }));
+      setStudentAssignments(formattedData);
+    } catch (error) {
+      console.error('Failed to fetch student assignments:', error);
+    }
   };
 
-  const getStudentAssignments=async()=>{
-    const data= await classApi.getStudentAssignments();
-    console.log(data)
-  }
+  useEffect(() => {
+    fetchClassroomById(classId);
+    fetchUserRoleInClass(classId);
+  }, [classId, fetchClassroomById, fetchUserRoleInClass]);
 
   useEffect(() => {
-    fetchTopics();
-    if (isTeacher) {
-      fetchAssignments();
+    if (userRoleInClass) {
+      fetchTopics();
+      if (userRoleInClass.role === 'teacher') {
+        fetchAssignments();
+      } else if (userRoleInClass.role === 'student') {
+        fetchStudentAssignments();
+      }
     }
-    if (isStudent) {
-      fetchStudentAssignments();
-      getStudentAssignments();
-    }
-  }, [currentClass]);
+  }, [userRoleInClass]);
+
+  if (!userRoleInClass || !currentClass) {
+    return <Loader />;
+  }
 
   const toggleCreateDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -99,19 +111,19 @@ function Classworks() {
 
   return (
     <>
-    {isStudent&&(
-      <>
-        <div>
-        <button onClick={()=> navigate(`/c/${classId}/view-student_works`)}
+      {userRoleInClass.role === 'student' && (
+        <>
+          <div>
+            <button onClick={() => navigate(`/c/${classId}/view-student_works`)}
               className="w-28 ms-10 bg-blue-600 text-white text-lg font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
             >
               View Works
             </button>
-        </div>
-      </>
+          </div>
+        </>
+      )}
 
-    )}
-      {isTeacher && (
+      {userRoleInClass.role === 'teacher' && (
         <>
           <div className='relative flex flex-wrap items-center justify-between'>
             <button onClick={toggleCreateDropdown}
@@ -132,7 +144,7 @@ function Classworks() {
               </div>
             )}
             <div className="relative inline-block w-64">
-              {topics.length > 0 ? <TopicDropdown options={topics} placeholder="Select an option" onSelect={setSelectedTopic} /> : <p>No topics</p>}
+              {topics.length > 0 ? <TopicDropdown options={topics} placeholder="Select an option" onSelect={setSelectedTopic} /> : <p></p>}
             </div>
             <CreateTopicModal
               isOpen={isModalOpen}
@@ -146,7 +158,7 @@ function Classworks() {
         </>
       )}
 
-      {isStudent && (
+      {userRoleInClass.role === 'student' && (
         <>
           <div className='flex justify-center items-center mt-20 h-full'>
             <StudentAssignmentList assignments={studentAssignments} />

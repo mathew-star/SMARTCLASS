@@ -7,6 +7,7 @@ const ChatRoom = ({ classId, userId }) => {
   const [messageInput, setMessageInput] = useState('');
   const [messages, setMessages] = useState([]);
   const webSocketInstanceRef = useRef(null);
+  const messageContainerRef = useRef(null);
   const current_user = JSON.parse(localStorage.getItem('User'));
 
   useEffect(() => {
@@ -14,6 +15,7 @@ const ChatRoom = ({ classId, userId }) => {
       try {
         const response = await classApi.fetchMessages(classId);
         setMessages(response);
+        scrollToBottom();
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -27,6 +29,7 @@ const ChatRoom = ({ classId, userId }) => {
 
       webSocketInstanceRef.current.addMessageListener((message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
+        scrollToBottom();
       });
     }
 
@@ -45,6 +48,7 @@ const ChatRoom = ({ classId, userId }) => {
       };
       if (webSocketInstanceRef.current) {
         webSocketInstanceRef.current.sendMessage(message);
+
       }
       setMessageInput('');
     }
@@ -52,6 +56,12 @@ const ChatRoom = ({ classId, userId }) => {
 
   const handleInputChange = (e) => {
     setMessageInput(e.target.value);
+  };
+
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
   };
 
   const formatTimestamp = (timestamp) => {
@@ -71,7 +81,7 @@ const ChatRoom = ({ classId, userId }) => {
       <header className="p-4 bg-gray-900 text-center">
         <h2 className="text-2xl font-semibold">Chat Room</h2>
       </header>
-      <main className="flex-1 p-4 overflow-y-auto space-y-4">
+      <main ref={messageContainerRef} className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages && messages.map((msg, index) => (
           <div key={index} className="flex items-start gap-2.5">
             <Avatar />

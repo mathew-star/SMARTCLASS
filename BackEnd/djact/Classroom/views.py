@@ -355,7 +355,7 @@ class StudentAssignmentsAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         student = get_object_or_404(Student, user=self.request.user, classroom__id=self.kwargs['classroom_id'])
-        return Assignment.objects.filter(assigned_students=student)
+        return Assignment.objects.filter(assigned_students=student).order_by('-created_at')
     
 
 

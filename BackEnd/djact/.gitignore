@@ -1,3 +1,22 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+
+# Environment
 .env
-venv
-db.sqlite3
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# pytest cache
+.pytest_cache/
+
+db.sqlite

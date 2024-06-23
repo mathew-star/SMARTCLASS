@@ -43,6 +43,7 @@ const useClassStore = create((set)=>({
     fetchUserRoleInClass: async (classId) => {
         try {
             const userRoleInClass = await classApi.fetchUserRoleInClass(classId);
+            
             set({ userRoleInClass });
         } catch (error) {
             console.error('Failed to fetch user role in class:', error);
@@ -52,7 +53,7 @@ const useClassStore = create((set)=>({
     fetchClassroomById: async (classId) => {
       try {
         const classroom = await classApi.fetchClassroomById(classId);
-        console.log("FetchStore: ",classroom)
+        
         set({ currentClass: classroom });
       } catch (error) {
         console.error('Failed to fetch classroom details:', error);

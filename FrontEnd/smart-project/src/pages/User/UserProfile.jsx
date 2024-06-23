@@ -135,22 +135,22 @@ const UserProfile = () => {
               <p>{userDetails.email}</p>
             )}
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-400">Teaching Classes</label>
             <ul className="list-disc list-inside">
               {teachingClasses.map((cls, index) => (
                 <li key={index}>{cls}</li>
               ))}
             </ul>
-          </div>
-          <div className="mb-4">
+          </div> */}
+          {/* <div className="mb-4">
             <label className="block text-gray-400">Enrolled Classes</label>
             <ul className="list-disc list-inside">
               {enrolledClasses.map((cls, index) => (
                 <li key={index}>{cls}</li>
               ))}
             </ul>
-          </div>
+          </div> */}
           {isEditing && (
             <button
               onClick={handleSave}

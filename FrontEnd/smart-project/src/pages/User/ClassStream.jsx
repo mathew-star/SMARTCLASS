@@ -7,17 +7,15 @@ import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { MdSend } from "react-icons/md";
 import { FaRegCopy } from "react-icons/fa";
 import classApi from '@/api/classroomApi';
+import Loader from '@/components/ui/Loader';
 
 function ClassStream() {
     const { classId } = useParams();
-    const currentClass = useClassStore((state) => state.currentClass);
-    const userRoleInClass = useClassStore((state) => state.userRoleInClass);
-    const isTeacher= userRoleInClass.role==='teacher'? true:false
     const fetchUserRoleInClass = useClassStore((state) => state.fetchUserRoleInClass);
     const fetchClassroomById = useClassStore((state) => state.fetchClassroomById);
     const [announcements, setAnnouncements] = useState([]);
     const [newAnnouncement, setNewAnnouncement] = useState('');
-
+    //hel
     const getAnnouncements=async(classId)=>{
       try{
       const data= await classApi.fetchAnnouncements(classId);
@@ -31,15 +29,16 @@ function ClassStream() {
     useEffect(() => {
       
 
-      getAnnouncements(classId);
-      fetchClassroomById(classId);
-      fetchUserRoleInClass(classId);
+       getAnnouncements(classId);
+       fetchClassroomById(classId);
+       fetchUserRoleInClass(classId);
     }, [classId]);
 
 
-
-
-
+    const currentClass = useClassStore((state) => state.currentClass);
+    const userRoleInClass = useClassStore((state) => state.userRoleInClass);
+    
+    const isTeacher= userRoleInClass.role==='teacher'? true:false
 
     const handleAnnouncementChange = (e) => {
         setNewAnnouncement(e.target.value);

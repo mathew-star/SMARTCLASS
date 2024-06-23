@@ -20,6 +20,18 @@ class MyUserManager(BaseUserManager):
         return user
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    """
+    Custom user model.
+    
+    Attributes:
+        name (str): The name of the user.
+        email (str): The email address of the user, used as the unique identifier.
+        profile_pic (ImageField, optional): The profile picture of the user.
+        is_active (bool): Indicates if the user account is active.
+        is_staff (bool): Indicates if the user has staff status.
+        is_superuser (bool): Indicates if the user has superuser status.
+        is_blocked (bool): Indicates if the user account is blocked.
+    """
     name = models.CharField(max_length=30)
     email = models.EmailField(unique=True, max_length=200)
     profile_pic = models.ImageField(null=True, blank=True)

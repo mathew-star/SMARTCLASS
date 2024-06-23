@@ -23,7 +23,6 @@ User = get_user_model()
 class RegisterView(APIView):
   def post(self, request):
     data = request.data
-    print(data)
 
     serializer = UserCreateSerializer(data=data)
 

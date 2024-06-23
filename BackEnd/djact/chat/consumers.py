@@ -60,6 +60,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'profile_pic': profile_pic
         }))
 
+
+    
+
     @database_sync_to_async
     def create_message(self, user, classroom, content):
         from chat.models import Message

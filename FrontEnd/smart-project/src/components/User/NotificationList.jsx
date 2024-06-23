@@ -15,6 +15,7 @@ const NotificationList = () => {
   const handleMark= ()=>{
     try{
     markAllAsRead();
+    fetchNotifications();
     toast.success("All Notifications marked")
     }
     catch(error){
@@ -25,7 +26,9 @@ const NotificationList = () => {
   return (
     <div className="container mx-auto p-6 text-white">
       <div className="bg-[#151829] shadow-md rounded-lg p-6">
-        <div className="flex justify-between items-center mb-4">
+        {notifications&&(
+          <>
+              <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Notifications</h2>
           {notifications.length > 0 && (
             <button
@@ -59,6 +62,9 @@ const NotificationList = () => {
           <div className="flex items-center justify-center h-64">
             <p className="text-2xl font-medium">No Notifications!</p>
           </div>
+        )}
+          </>
+
         )}
         <ToastContainer
           position="top-right"

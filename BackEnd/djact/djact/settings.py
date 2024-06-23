@@ -144,8 +144,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SmartClass',
-        'USER': 'smartuser',
-        'PASSWORD': 'password',
+        'USER': 'root',
+        'PASSWORD': '9344',
         'HOST': 'localhost',  
         'PORT': '3306',       
     }
