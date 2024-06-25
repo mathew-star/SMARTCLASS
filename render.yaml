@@ -1,0 +1,22 @@
+databases:
+  - name: smart-class-db
+    plan: free
+    databaseName: smart_class_db
+    user: mathew
+
+services:
+  - type: web
+    plan: free
+    name: smartclass
+    runtime: python
+    buildCommand: "./BackEnd/djact/build.sh"
+    startCommand: "python -m uvicorn djact.asgi:application --host 0.0.0.0 --port 10000"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smart-class-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
