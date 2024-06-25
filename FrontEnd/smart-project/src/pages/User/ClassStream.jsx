@@ -62,7 +62,7 @@ function ClassStream() {
         <div className="flex flex-col justify-center items-center">
           <img
             className="rounded-lg object-cover w-full md:w-[80%] lg:w-[60%] h-64 md:h-80 mb-10"
-            src={`${BASE_URL}${currentClass.banner_image}`}
+            src={'currentClass.banner_image_url'}
             alt={currentClass.title}
           />
   

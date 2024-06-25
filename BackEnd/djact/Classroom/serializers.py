@@ -2,19 +2,35 @@
 from rest_framework import serializers
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile, Topic,PrivateComment
 from users.models import UserAccount
+from django.conf import settings
 
 
 
-class  ClassroomSerializer(serializers.ModelSerializer):
+class ClassroomSerializer(serializers.ModelSerializer):
+    banner_image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Classroom
-        fields = ['id', 'title', 'sections', 'description', 'banner_image', 'code', 'invite_link', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'sections', 'description', 'banner_image_url', 'code', 'invite_link', 'created_at', 'updated_at']
+
+    def get_banner_image_url(self, obj):
+        if obj.banner_image:
+            return f"{settings.MEDIA_URL}{obj.banner_image}"
+        return None
 
 
 class UserAccountSerializer(serializers.ModelSerializer):
+    profile_pic_url = serializers.SerializerMethodField()
+
     class Meta:
         model = UserAccount
-        fields = ['id', 'name', 'email', 'profile_pic']
+        fields = ('id', 'name', 'email', 'is_superuser', 'is_blocked', 'profile_pic', 'profile_pic_url')
+
+    def get_profile_pic_url(self, obj):
+        if obj.profile_pic:
+            return obj.profile_pic.url
+        return None
+    
 
 class TeacherSerializer(serializers.ModelSerializer):
     user = UserAccountSerializer()

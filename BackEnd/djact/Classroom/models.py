@@ -3,6 +3,7 @@ import random
 from django.db import models
 from django.conf import settings
 from django.utils.crypto import get_random_string
+import boto3
 
 
 class Classroom(models.Model):
@@ -18,12 +19,23 @@ class Classroom(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.banner_image:
-            default_images = os.listdir(os.path.join(settings.MEDIA_ROOT, 'defaults'))
-            random_image = random.choice(default_images)
-            self.banner_image = os.path.join('defaults', random_image)
+            s3_client = boto3.client(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_S3_REGION_NAME
+            )
+            
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+            default_images = s3_client.list_objects_v2(Bucket=bucket_name, Prefix='defaults/')['Contents']
+            default_image_keys = [image['Key'] for image in default_images if image['Key'] != 'defaults/']
+            random_image_key = random.choice(default_image_keys)
+            self.banner_image = random_image_key
+        
         if not self.invite_link:
             frontend_host = settings.FRONTEND_HOST
             self.invite_link = f"{frontend_host}/join/{self.code}/"
+        
         super().save(*args, **kwargs)
 
 

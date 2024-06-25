@@ -34,7 +34,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     """
     name = models.CharField(max_length=30)
     email = models.EmailField(unique=True, max_length=200)
-    profile_pic = models.ImageField(null=True, blank=True)
+    profile_pic = models.ImageField(upload_to='User_profile/',null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False) 

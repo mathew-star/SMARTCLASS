@@ -76,7 +76,7 @@ const UserProfile = () => {
         <div className="relative">
           {userDetails?.profile_pic ? (
             <img
-              src={`${BASE_URL}${user.profile_pic}`} 
+              src={'user.profile_pic_url'} 
               alt="Profile"
               className="rounded-full object-cover h-32 w-32 mb-4"
             />

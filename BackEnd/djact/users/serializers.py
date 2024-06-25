@@ -41,6 +41,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = User
-    fields = ('id','name', 'email','is_superuser','is_blocked','profile_pic')
+    profile_pic_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'email', 'is_superuser', 'is_blocked', 'profile_pic', 'profile_pic_url')
+
+    def get_profile_pic_url(self, obj):
+        if obj.profile_pic:
+            return obj.profile_pic.url
+        return None
