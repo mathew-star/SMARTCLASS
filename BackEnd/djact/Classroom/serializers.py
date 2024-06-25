@@ -15,7 +15,11 @@ class ClassroomSerializer(serializers.ModelSerializer):
 
     def get_banner_image_url(self, obj):
         if obj.banner_image:
-            return f"{settings.MEDIA_URL}{obj.banner_image}"
+            try:
+                return obj.banner_image.url
+            except Exception as e:
+                print(f"Error getting banner image URL: {e}")
+                return None
         return None
 
 

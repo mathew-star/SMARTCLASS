@@ -105,11 +105,13 @@ class ClassroomDetailView(APIView):
     def get(self, request, pk, format=None):
         try:
             classroom = Classroom.objects.get(pk=pk)
-            print(classroom)
             serializer = ClassroomSerializer(classroom)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Classroom.DoesNotExist:
             return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error retrieving classroom: {e}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk, format=None):
 
