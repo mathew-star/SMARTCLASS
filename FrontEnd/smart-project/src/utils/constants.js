@@ -1,5 +1,5 @@
-export const API_BASE_URL = 'http://0.0.0.0:10000/api'; 
-export const BASE_URL = 'http://0.0.0.0:10000'; 
+export const API_BASE_URL = 'https://smartclass.onrender.com/api'; 
+export const BASE_URL = 'https://smartclass.onrender.com'; 
 
 
 // Authentication
