@@ -301,7 +301,7 @@ class TeacherAssignmentsAPIView(APIView):
                 assignment.files.add(assignment_file)
             assignment.save()  # Save the assignment after adding the files
 
-            send_assignment_notification.delay(assignment.id)
+            # send_assignment_notification.delay(assignment.id)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -385,7 +385,7 @@ class StudentSubmissionView(APIView):
 
         submission.status = 'submitted'
         submission.save()
-        send_submission_notification.delay(assignment_id, student.id)
+        # send_submission_notification.delay(assignment_id, student.id)
         serializer = SubmissionSerializer(submission)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
