@@ -454,7 +454,7 @@ class StudentSpecificSubmissionView(APIView):
             submission.points = points
             submission.save()
 
-            send_submission_grade_notification.delay(submission.id)
+            # send_submission_grade_notification.delay(submission.id)
 
             return Response({'message': 'Points updated successfully'}, status=status.HTTP_200_OK)
         else:
