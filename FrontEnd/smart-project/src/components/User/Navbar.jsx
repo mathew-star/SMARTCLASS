@@ -19,6 +19,7 @@ import { IoNotifications } from "react-icons/io5";
 import useNotificationStore from '@/store/notificationStore';
 
 
+
 function Navbar() {
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
@@ -40,6 +41,8 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    const { clearStore } = useClassStore.getState();
+    clearStore();
     navigate("/login");
   };
 

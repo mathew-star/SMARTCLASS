@@ -53,17 +53,16 @@ function ClassPeople() {
     removeStudents: state.removeStudents,
     fetchUserRoleInClass:state.fetchUserRoleInClass,
   }));
-
-  console.log(classMembers.students);
+console.log(classMembers)
 
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
-    if (currentClass) {
-      fetchClassMembers(currentClass.id);
+    if (classId) {
+      fetchClassMembers(classId);
+      fetchUserRoleInClass(classId);
     }
-    fetchUserRoleInClass(classId);
-  }, [currentClass, fetchClassMembers]);
+  }, [classId, fetchClassMembers, fetchUserRoleInClass]);
 
   if (!userRoleInClass || !currentClass) {
     return <Loader />;

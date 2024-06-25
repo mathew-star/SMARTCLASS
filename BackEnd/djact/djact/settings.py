@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from celery.schedules import crontab 
+import dj_database_url
 
 
 
@@ -24,11 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zd73owxa%9&fbp=4*st4=v4imt9qv#hp1bbc=md(5qd8vf)_h+'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-zd73owxa%9&fbp=4*st4=v4imt9qv#hp1bbc=md(5qd8vf)_h+')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -114,7 +114,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://red-cpshadd6l47c73e5g5ng:6379')],
         },
     },
 }
@@ -141,14 +141,9 @@ LOGGING = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SmartClass',
-        'USER': 'root',
-        'PASSWORD': '9344',
-        'HOST': 'localhost',  
-        'PORT': '3306',       
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'postgresql://mathew:p86CVBcLRWocQQqwgqSy47fwPFjmcnzW@dpg-cps6ueqj1k6c738iqdtg-a/smart_class_db')
+    )
 }
 
 

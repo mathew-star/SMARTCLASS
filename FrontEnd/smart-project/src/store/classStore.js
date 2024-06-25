@@ -1,8 +1,12 @@
 import {create} from 'zustand';
 import classApi from '../api/classroomApi';
+import { persist } from 'zustand/middleware';
 
 
-const useClassStore = create((set)=>({
+const useClassStore = create(
+  persist(
+  
+  (set)=>({
     currentClass:null,
     teachingClasses: [],
     enrolledClasses: [],
@@ -83,9 +87,14 @@ const useClassStore = create((set)=>({
         console.error('Failed to remove students:', error);
       }
     },
+}),
+    {
+      name: 'class-store', // name of the item in the storage (must be unique)
+      getStorage: () => localStorage, // (optional) by default, 'localStorage' is used
+    }
 
+  )
 
-
-}));
+);
 
 export default useClassStore;
