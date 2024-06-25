@@ -110,11 +110,15 @@ function EditSelectStudentsModal({ isOpen, onClose, onSave, selectedStudents: in
                       onChange={() => handleSelectStudent(student.id)}
                     />
                     {student.user.profile_pic ? (
-                      <img
+                      <>
+                      {student.user.profile_pic_url &&(
+                        <img
                         className="w-12 h-12 rounded-full object-cover"
-                        src={`${BASE_URL}${student.user.profile_pic}`}
+                        src={student.user.profile_pic_url}
                         alt={student.user.name}
                       />
+                      )}
+                      </>
                     ) : (
                       <Avatar {...stringAvatar(student.user.name)} />
                     )}

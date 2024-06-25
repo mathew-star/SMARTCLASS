@@ -94,7 +94,13 @@ console.log(classMembers)
         <h2 className="text-2xl font-semibold mb-4">Teacher</h2>
         {classMembers.teacher && (
           <div className="flex items-center space-x-4 bg-gray-900 p-4 rounded-lg shadow-lg">
-            {classMembers.teacher.user.profile_pic? <img className="w-16 h-16 rounded-full object-cover" src={`${BASE_URL}${classMembers.teacher.user.profile_pic}`} alt={classMembers.teacher.user.name} />
+            {classMembers.teacher.user.profile_pic? (
+              <>
+              {classMembers.teacher.user.profile_pic_url && (
+                <img className="w-16 h-16 rounded-full object-cover" src={classMembers.teacher.user.profile_pic_url} alt={classMembers.teacher.user.name} />
+              )}
+              </>
+            )
             : <Avatar {...stringAvatar(classMembers.teacher.user.name)} />}
             
             <div>
@@ -137,7 +143,13 @@ console.log(classMembers)
                   onChange={() => handleSelectStudent(student.id)}
                 />
               )}
-                {student.user.profile_pic ? <img className="w-12 h-12 rounded-full object-cover" src={`${BASE_URL}${student.user.profile_pic}`} alt={student.user.name} />
+                {student.user.profile_pic ? (
+                  <>
+                    {student.user.profile_pic_url &&(
+                      <img className="w-12 h-12 rounded-full object-cover" src={student.user.profile_pic_url} alt={student.user.name} />
+                    )}
+                  </>
+                )
                 : <Avatar {...stringAvatar(student.user.name)} />
                 }
                 

@@ -169,12 +169,20 @@ function AssignmentDetails() {
               />
 
               <div className='mt-4'>
-                {files.map((file, index) => (
+              {files &&(
+                  <>
+                  {files.map((file, index) => (
                   <div key={index} className='flex justify-between items-center bg-[#273445] p-2 rounded mt-2'>
-                    <p className='text-white cursor-pointer' onClick={() => handleFilePreview(file)}>{file.file ? file.file.split('/').pop() : file.name}</p>
+                    {file.file && (
+                      <p className='text-white cursor-pointer' onClick={() => handleFilePreview(file)}>{file.file ? file.file.split('/').pop() : file.name}</p>
+                    )}
                     <MdClose className='text-white cursor-pointer' onClick={() => handleFileRemove(file)} />
                   </div>
                 ))}
+                  
+                  </>
+
+                )}
               </div>
 
               <div className='rounded bg-[#172231] p-4 mt-5'>

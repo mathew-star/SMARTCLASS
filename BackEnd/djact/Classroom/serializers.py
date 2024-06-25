@@ -68,9 +68,15 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class AssignmentFileSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
     class Meta:
         model = AssignmentFile
-        fields = '__all__'
+        fields = ['file', 'file_url', 'uploaded_at']
+
+    def get_file_url(self, obj):
+        if obj.file:
+            return obj.file.url
+        return None
 
 class AssignmentSerializer(serializers.ModelSerializer):
     files = AssignmentFileSerializer(many=True, read_only=True)
@@ -121,9 +127,16 @@ class getAssignmentSerializer(serializers.ModelSerializer):
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubmissionFile
-        fields = '__all__'
+        fields = ['file', 'file_url', 'uploaded_at']
+
+    def get_file_url(self, obj):
+        if obj.file:
+            return obj.file.url
+        return None
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
