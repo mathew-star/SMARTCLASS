@@ -60,11 +60,18 @@ function ClassStream() {
   
         
         <div className="flex flex-col justify-center items-center">
-          <img
-            className="rounded-lg object-cover w-full md:w-[80%] lg:w-[60%] h-64 md:h-80 mb-10"
-            src={'currentClass.banner_image_url'}
-            alt={currentClass.title}
-          />
+         {currentClass.banner_image_url ? (
+      <img
+        className="rounded-lg object-cover w-full md:w-[80%] lg:w-[60%] h-64 md:h-80 mb-10"
+        src={currentClass.banner_image_url}
+        alt={currentClass.title}
+        onError={(e) => {
+          console.error('Error loading image:', e);
+        }}
+      />
+    ) : (
+      <p>No banner image available</p>
+    )}
   
           {isTeacher &&(
             <div className="mt-6 w-full md:w-[80%] lg:w-[60%] items-center mb-10  flex flex-row bg-[#4c515d] p-8 rounded">
