@@ -179,10 +179,7 @@ REST_FRAMEWORK = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
-    "http://localhost:5173",
-    "http://localhost:5175",  # Remove trailing slash from the URL
+    'https://smartclass-frontend.onrender.com'  
 ]
 
 CORS_ALLOW_ALL_ORIGINS: True
