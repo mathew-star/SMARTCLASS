@@ -14,6 +14,7 @@ class WebSocketService {
   }
 
   connect(classId, userId) {
+    //update the path
     const path = `wss://smartclass.onrender.com/ws/chat/${classId}/${userId}/`;
     this.socketRef = new WebSocket(path);
 
