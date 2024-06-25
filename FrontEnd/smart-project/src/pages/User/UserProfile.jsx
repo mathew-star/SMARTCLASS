@@ -74,9 +74,9 @@ const UserProfile = () => {
     <div className="flex justify-center min-h-screen ">
       <div className="bg-[#151A2C] text-white p-8 rounded-lg shadow-lg w-1/2 h-1/2 flex flex-col items-center">
         <div className="relative">
-          {userDetails?.profile_pic ? (
+          {userDetails?.profile_pic_url ? (
             <img
-              src={'user.profile_pic_url'} 
+              src={user.profile_pic_url} 
               alt="Profile"
               className="rounded-full object-cover h-32 w-32 mb-4"
             />

@@ -31,9 +31,11 @@ function ClassCard({ classroom }) {
   };
   return (
     <div className="bg-[#596173] text-white rounded-lg shadow-md overflow-hidden w-64 m-4">
-      {classroom.banner_image_url &&(
+      {classroom.banner_image_url
+ &&(
           <img 
-          src={classroom.banner_image_url} 
+          src={classroom.banner_image_url
+          } 
           alt={classroom.title} 
           className="w-full h-32 object-cover"
         />
