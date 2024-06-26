@@ -133,7 +133,7 @@ function AdminClassMembers() {
                   onChange={() => handleSelectStudent(student.id)}
                 /> */}
 
-                {student.user.profile_pic ? <img className="w-12 h-12 rounded-full object-cover" src={`${BASE_URL}${student.user.profile_pic}`} alt={student.user.name} />
+                {student.user.profile_pic ? <img className="w-12 h-12 rounded-full object-cover" src={student.user.profile_pic} alt={student.user.name} />
                 : <Avatar {...stringAvatar(student.user.name)} />
                 }
                 

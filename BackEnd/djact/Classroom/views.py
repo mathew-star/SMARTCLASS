@@ -425,6 +425,7 @@ class StudentSubmissionView(APIView):
         submission.files.clear()  # Remove all associated files
         SubmissionFile.objects.filter(submission=submission).delete()
         submission.status = 'unsubmitted'
+        submission.points=0
         submission.save()
 
         return Response({'success': 'Assignment unsubmitted successfully'}, status=status.HTTP_200_OK)

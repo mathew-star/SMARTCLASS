@@ -10,7 +10,7 @@ function ViewStudenworksList({ assignments }) {
   }));
 
   const handleClick = (assignmentId) => {
-    navigate(`/class/${currentClass.id}/assignment/${assignmentId}/details/`);
+    navigate(`/c/${currentClass.id}/s/${assignmentId}/assignment_details/`);
   };
 
 

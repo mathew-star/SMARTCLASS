@@ -81,7 +81,7 @@ const UserProfile = () => {
         {user.profile_pic ? (
                                     <Avatar
                                         alt={user.name}
-                                        src={`${BASE_URL}${user.profile_pic}`} 
+                                        src={user.profile_pic} 
                                         sx={{ width: 100, height: 95 }}
                                     />
                                 ) : (

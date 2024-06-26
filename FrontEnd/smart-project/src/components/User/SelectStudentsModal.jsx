@@ -113,10 +113,10 @@ function SelectStudentsModal({ isOpen, onClose, onSave }) {
                         onChange={() => handleSelectStudent(student.id)}
                       />
                     )}
-                    {student.user.profile_pic ? (
+                    {student.user.profile_pic_url ? (
                       <img
                         className="w-12 h-12 rounded-full object-cover"
-                        src={`${BASE_URL}${student.user.profile_pic}`}
+                        src={student.user.profile_pic_url}
                         alt={student.user.name}
                       />
                     ) : (

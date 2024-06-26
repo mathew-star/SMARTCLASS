@@ -15,11 +15,13 @@ function AdminClassCards({classroom}) {
   return (
     <>
       <div className="bg-[#596173] text-white rounded-lg shadow-md overflow-hidden w-64 m-4">
-      <img 
-        src={`${BASE_URL}${classroom.banner_image}`} 
+      {classroom.banner_image_url &&(
+        <img 
+        src={classroom.banner_image_url}
         alt={classroom.title} 
         className="w-full h-32 object-cover"
       />
+      )}
       <div className="p-4">
         <h2 className="text-2xl font-bold mt-3">{classroom.title}</h2>
         <p className="text-sm mb-3 ">{classroom.sections}</p>

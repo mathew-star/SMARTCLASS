@@ -71,7 +71,7 @@ const Leaderboard = () => {
                   {entry.user.profile_pic ? (
                     <img
                       className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
-                      src={`${BASE_URL}${entry.user.profile_pic}`}
+                      src={entry.user.profile_pic}
                       alt={entry.user.name}
                     />
                   ) : (
