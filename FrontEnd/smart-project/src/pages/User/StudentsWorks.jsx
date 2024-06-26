@@ -65,7 +65,7 @@ function StudentsWorks() {
         const assignedStudents = assignmentDetails.assigned_students || [];
         setStudents(assignedStudents);
       } catch (error) {
-        console.error('Error fetching assignment details:', error);
+        console.error('Error fetching assignment details:');
       }
     };
     fetchDetails(classId, assignmentId);
@@ -73,7 +73,7 @@ function StudentsWorks() {
 
 
   }, []);
-  console.log(assignmentDetails)
+
 
 
   const fetchStudentSubmission = async (studentId) => {
@@ -82,7 +82,7 @@ function StudentsWorks() {
       setStudentSubmission(submission);
       setPoints(submission.points)
     } catch (error) {
-      console.error('Error fetching student submission:', error);
+      console.error('Error fetching student submission:');
     }
   };
 

@@ -45,7 +45,7 @@ function AssignmentDetails() {
         setFiles(data.files || []);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching assignment details:', error);
+        console.error('Error fetching assignment details:');
         setLoading(false);
       }
     };
@@ -55,7 +55,7 @@ function AssignmentDetails() {
         const topicsData = await classApi.fetchTopic(classId);
         setTopics(topicsData.map(topic => ({ value: topic.id, label: topic.title })));
       } catch (error) {
-        console.error('Error fetching topics:', error);
+        console.error('Error fetching topics:');
       }
     };
     
@@ -94,7 +94,7 @@ function AssignmentDetails() {
       toast.success('Assignment deleted successfully!');
       navigate(`/c/${classId}/works`);
     } catch (error) {
-      console.error('Error deleting assignment:', error);
+      console.error('Error deleting assignment:');
       toast.error('Failed to delete assignment.');
     }
   };
@@ -117,7 +117,7 @@ function AssignmentDetails() {
       setIsEditing(false);
       toast.success('Assignment updated successfully!');
     } catch (error) {
-      console.error('Error updating assignment:', error);
+      console.error('Error updating assignment:');
       toast.error('Failed to update assignment.');
     }
   };

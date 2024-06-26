@@ -17,7 +17,6 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
   const [newComment, setNewComment] = useState('');
 
   const current_user = JSON.parse(localStorage.getItem('User'))
-  console.log(current_user.id)
 
 
 
@@ -26,7 +25,7 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
       const data = await classApi.FetchPrivateComments(assignmentId,Student_id, assignment.created_by.id);
       setComments(data || []);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error('Error fetching comments:');
     }
   };
 
@@ -42,7 +41,7 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
       setNewComment('');
       toast.success('Comment posted successfully!');
     } catch (error) {
-      console.error('Error posting comment:', error);
+      
       toast.error('Failed to post comment.');
     }
   };
@@ -52,7 +51,7 @@ const TeacherPrivateComment = ({ assignmentId, Student_id,assignment }) => {
         fetchComments();
     }
   }, [assignmentId,Student_id]);
-  console.log(comments)
+
 
   return (
     <>

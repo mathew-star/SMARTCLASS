@@ -27,7 +27,7 @@ const PrivateCommentSection = ({ assignmentId, Teacher_id,assignment }) => {
       const data = await classApi.FetchPrivateComments(assignmentId, student_id,Teacher_id);
       setComments(data || []);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error('Error fetching comments:');
     }
   };
 
@@ -44,7 +44,6 @@ const PrivateCommentSection = ({ assignmentId, Teacher_id,assignment }) => {
       setNewComment('');
       toast.success('Comment posted successfully!');
     } catch (error) {
-      console.error('Error posting comment:', error);
       toast.error('Failed to post comment.');
     }
   };
@@ -55,7 +54,6 @@ const PrivateCommentSection = ({ assignmentId, Teacher_id,assignment }) => {
         fetchComments(current_student.id);
     }
   }, [assignmentId,Teacher_id]);
-  console.log(comments)
 
   return (
     <div className="comment-section mt-6">

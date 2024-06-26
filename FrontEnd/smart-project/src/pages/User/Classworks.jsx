@@ -34,7 +34,7 @@ function Classworks() {
       const data = await classApi.fetchTopic(classId);
       setTopics(data.map(topic => ({ value: topic.id, label: topic.title })));
     } catch (error) {
-      console.error('Failed to fetch topics:', error);
+      console.error('Failed to fetch topics:');
     }
   };
 
@@ -56,7 +56,7 @@ function Classworks() {
       }));
       setAssignments(formattedData);
     } catch (error) {
-      console.error('Failed to fetch assignments:', error);
+      console.error('Failed to fetch assignments:');
     }
   };
 

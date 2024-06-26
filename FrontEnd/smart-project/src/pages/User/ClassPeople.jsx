@@ -31,9 +31,7 @@ function ClassPeople() {
       console.log("Name:", name);
       const firstName = name.split(' ')[0];
       const lastName = name.split(' ')[1];
-      console.log("First name:", firstName);
-      console.log("Last name:", lastName);
-      
+
       return {
         sx: {
           bgcolor: stringToColor(name),
@@ -53,7 +51,7 @@ function ClassPeople() {
     removeStudents: state.removeStudents,
     fetchUserRoleInClass:state.fetchUserRoleInClass,
   }));
-console.log(classMembers)
+
 
   const [selectedStudents, setSelectedStudents] = useState([]);
 

@@ -87,7 +87,7 @@ function CreateAssignment() {
       console.log('Assignment created successfully:', response.data);
     } catch (error) {
 
-      console.error('Error creating assignment:', error);
+      console.error('Error creating assignment:');
       toast.error('Failed to create');
     }
   };

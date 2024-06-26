@@ -66,7 +66,7 @@ const UserProfile = () => {
       setIsEditing(false);
       console.log('User details saved:', updatedUser);
     } catch (error) {
-      console.error('Error updating user profile:', error);
+      console.error('Error updating user profile:');
     }
   };
 

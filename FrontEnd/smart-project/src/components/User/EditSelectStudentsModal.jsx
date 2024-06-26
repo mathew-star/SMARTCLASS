@@ -49,7 +49,6 @@ function EditSelectStudentsModal({ isOpen, onClose, onSave, selectedStudents: in
   }));
 
   const [selectedStudents, setSelectedStudents] = useState(initialSelectedStudents);
-  console.log("modal",selectedStudents)
 
   useEffect(() => {
     if (currentClass) {

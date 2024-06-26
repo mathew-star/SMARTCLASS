@@ -57,7 +57,7 @@ const EditClassroom = () => {
       await classApi.updateClassroom(classId, updatedData);
       navigate(`/c/${classId}/stream`);
     } catch (error) {
-      console.error('Error updating classroom:', error);
+      console.error('Error updating classroom:');
     }
   };
 

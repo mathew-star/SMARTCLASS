@@ -53,11 +53,9 @@ function Navbar() {
   const handleCreateSave = async (classData) => {
     try{
       const resp= await classApi.createClassroom(classData)
-      console.log(resp)
       fetchTeachingClasses()
     }
     catch(error){
-      console.error(error)
       toast.error(error.response.data.error);
     }
     
@@ -65,7 +63,6 @@ function Navbar() {
   const handleJoinSave=async(code)=>{
     try{
       const response= await classApi.joinClassroom(code)
-      console.log(response)
       fetchEnrolledClasses()
     }
     catch(error){

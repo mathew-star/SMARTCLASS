@@ -54,7 +54,7 @@ const Leaderboard = () => {
 
   // Sort leaderboard entries based on points in descending order
   const sortedLeaderboard = [...leaderboard].sort((a, b) => b.total_points - a.total_points);
-  console.log(leaderboard)
+
 
   return (
 <>

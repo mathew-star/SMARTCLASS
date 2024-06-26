@@ -46,7 +46,7 @@ function StudentAssignmentDetails() {
           setLoading(false);
 
         } catch (error) {
-          console.error('Error fetching student submission:', error);
+          console.error('Error fetching student submission:');
           setLoading(false);
         }
       };
@@ -114,13 +114,12 @@ function StudentAssignmentDetails() {
             toast.success('Assignment unsubmitted successfully!');
             fetchStudentSubmission();
         } catch (error) {
-            console.error('Error unsubmitting assignment:', error);
+            console.error('Error unsubmitting assignment:');
             toast.error('Failed to unsubmit assignment.');
         }
     };
     
 
-    console.log(submissionFiles)
 
     if (loading) {
         return <div>Loading...</div>;;

@@ -22,7 +22,7 @@ function ClassStream() {
       setAnnouncements(data)
       }
       catch(error){
-        console.error(error)
+        console.error('error')
       }
     }
   
@@ -52,7 +52,7 @@ function ClassStream() {
             setNewAnnouncement('');
             getAnnouncements(classId);
         } catch (error) {
-            console.error('Error posting announcement:', error);
+            console.error('Error posting announcement:');
         }
     };
   
