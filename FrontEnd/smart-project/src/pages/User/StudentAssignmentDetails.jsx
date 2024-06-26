@@ -149,7 +149,7 @@ function StudentAssignmentDetails() {
                             {files.map((file, index) => (
                                 <div key={index} className='flex justify-between items-center bg-[#273445] p-2 rounded mt-2'>
                                     <a
-                                        href={`${BASE_URL}${file.file}`}
+                                        href={file.file}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-white cursor-pointer"
@@ -204,7 +204,7 @@ function StudentAssignmentDetails() {
                         {submissionFiles.map((file, index) => (
                             <div key={index} className='flex justify-between items-center bg-[#273445] p-2 rounded mt-2'>
                                 <a
-                                        href={`${BASE_URL}${file.file}`}
+                                        href={file.file}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-white cursor-pointer"

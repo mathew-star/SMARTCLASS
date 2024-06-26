@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from notifications.models import Notification
 from .models import Classroom, Teacher, Student,Announcements,Assignment, Submission, AssignmentFile, SubmissionFile,Topic,PrivateComment
 from .permissions import IsTeacher
 from .serializers import ClassroomSerializer, StudentSerializer, TeacherSerializer,announcementSerializer,AssignmentFileSerializer,AssignmentSerializer,SubmissionSerializer,SubmissionFileSerializer,TopicSerializer,StudentAssignmentSerializer,getAssignmentSerializer,getStudentAssignmentSerializer,PrivateCommentSerializer,getPrivateCommentSerializer,LeaderboardSerializer,ClassroomAnalyticsSerializer
@@ -301,6 +302,9 @@ class TeacherAssignmentsAPIView(APIView):
                 assignment.files.add(assignment_file)
             assignment.save()  # Save the assignment after adding the files
 
+            message = f'New assignment "{assignment.title}" has been posted in {assignment.classroom.title}.'
+            for student in assignment.assigned_students.all():
+                Notification.objects.create(recipient=student.user, message=message)
             # send_assignment_notification.delay(assignment.id)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -385,7 +389,15 @@ class StudentSubmissionView(APIView):
 
         submission.status = 'submitted'
         submission.save()
-        # send_submission_notification.delay(assignment_id, student.id)
+        teacher = assignment.created_by.user
+
+        message = f"{student.user.name} has submitted the assignment '{assignment.title}' in '{assignment.classroom.title}'."
+
+        Notification.objects.create(
+            recipient=teacher,
+            message=message,
+        )
+          # send_submission_notification.delay(assignment_id, student.id)
         serializer = SubmissionSerializer(submission)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

@@ -146,10 +146,10 @@ function StudentsWorks() {
                     }}  key={student.id} className="flex items-center justify-between p-4 hover:bg-[#272e4e] cursor-pointer">
                       <div className="flex items-center space-x-4">
     
-                        {student.user.profile_pic ? (
+                        {student.user.profile_pic_url ? (
                           <img
                             className="w-12 h-12 rounded-full object-cover"
-                            src={`${BASE_URL}${student.user.profile_pic}`}
+                            src={student.user.profile_pic_url}
                             alt={student.user.name}
                           />
                         ) : (
@@ -204,7 +204,7 @@ function StudentsWorks() {
                             {studentSubmission.files.map((file, index) => (
                                 <div key={index} className='flex justify-between items-center bg-[#273445] p-2 rounded mt-2'>
                                     <a
-                                            href={`${BASE_URL}${file.file}`}
+                                            href={file.file}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-white cursor-pointer"

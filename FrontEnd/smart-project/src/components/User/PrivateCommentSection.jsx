@@ -66,10 +66,10 @@ const PrivateCommentSection = ({ assignmentId, Teacher_id,assignment }) => {
                 <li key={comment.id} className="flex flex-col p-4   hover:bg-slate-700 border-gray-200 rounded" >
                     <div className='flex items-center'>
                         <div className='me-2 '>
-                        {comment.user.profile_pic ? (
+                        {comment.user.profile_pic_url ? (
                             <img
                                 className="w-12 h-12 rounded-full object-cover"
-                                src={`${BASE_URL}${comment.user.profile_pic}`}
+                                src={comment.user.profile_pic_url}
                                 alt={comment.user.name}
                             />
                             ) : (
