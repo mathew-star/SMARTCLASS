@@ -45,7 +45,7 @@ function ClassHeader() {
       <div className="w-full border-b-2 rounded shadow-2xl shadow-[#1f1f28] p-4 mb-8 flex justify-between items-center">
         <div className="flex flex-col md:flex-row text-2xl">
           <h1 className="text-3xl font-bold">{currentClass.title}</h1>
-          <p className="mt-2 md:mt-0 md:ml-8">{currentClass.description}</p>
+          <p className="mt-2 md:mt-0 md:ml-8">{currentClass.sections}</p>
         </div>
 
         <div className="flex items-center text-2xl">
