@@ -18,7 +18,8 @@ class Classroom(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.banner_image:
+        # Only set a default banner image if it's a new instance and no banner_image is provided
+        if not self.pk and not self.banner_image:
             s3_client = boto3.client(
                 's3',
                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -31,7 +32,8 @@ class Classroom(models.Model):
             default_image_keys = [image['Key'] for image in default_images if image['Key'] != 'defaults/']
             random_image_key = random.choice(default_image_keys)
             self.banner_image = random_image_key
-        
+
+        # Set invite link if not already set
         if not self.invite_link:
             frontend_host = settings.FRONTEND_HOST
             self.invite_link = f"{frontend_host}/join/{self.code}/"
