@@ -26,7 +26,7 @@ function AdminNavbar() {
       <div className="flex items-center space-x-4">
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger><Link to="/admin/home/profile"><FaUser className="cursor-pointer w-6 h-7 me-4" /></Link></TooltipTrigger>
+          <TooltipTrigger><Link to="/admin/h/profile"><FaUser className="cursor-pointer w-6 h-7 me-4" /></Link></TooltipTrigger>
           <TooltipContent>
             <p></p>
           </TooltipContent>
