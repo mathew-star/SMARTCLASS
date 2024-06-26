@@ -8,7 +8,6 @@ import OTPRequest from '@/pages/User/OTPRequest';
 import VerifyOTP from '@/pages/User/VerifyOTP';
 import ResetPassword from '@/pages/User/ResetPassword';
 import NotFound from '@/components/ui/NotFound';
-import ClassDashboard from '@/pages/User/ClassDashboard';
 import ClassLayout from '@/components/Layout/ClassLayout';
 import ClassStream from '@/pages/User/ClassStream';
 import Classworks from '@/pages/User/Classworks';
