@@ -195,8 +195,7 @@ REST_FRAMEWORK = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    'https://smartclass-frontend.onrender.com',
-    'http://localhost:5173/',  
+    'https://smartclass-frontend.onrender.com',  
 ]
 
 CORS_ALLOW_ALL_ORIGINS: True
