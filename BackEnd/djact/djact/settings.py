@@ -141,26 +141,26 @@ LOGGING = {
 }
 
 
-DATABASES = {
+# DATABASES = {
 
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'SmartClass',
-        'USER': 'smartuser',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    }
-}
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'SmartClass',
+#         'USER': 'smartuser',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'PORT': '3306',
+#     }
+# }
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.environ.get('DATABASE_URL', 'postgresql://mathew:p86CVBcLRWocQQqwgqSy47fwPFjmcnzW@dpg-cps6ueqj1k6c738iqdtg-a/smart_class_db')
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'postgresql://mathew:p86CVBcLRWocQQqwgqSy47fwPFjmcnzW@dpg-cps6ueqj1k6c738iqdtg-a/smart_class_db')
+    )
+}
 
 
 
