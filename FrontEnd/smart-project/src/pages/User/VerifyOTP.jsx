@@ -18,6 +18,7 @@ const VerifyOTP = () => {
   const useEmail = useAuthStore((state) => state.current_otp_user);
   const setToken = useAuthStore((state) => state.setResetToken);
 
+
   const notifyError = (message) => {
     toast.error(message, {
       position: "top-center"

@@ -175,8 +175,8 @@ class OTPVerifyView(APIView):
         print ("Email: ", email)
         print("opt",otp)
 
-        if not email or not otp:
-            return Response({"detail": "Email and OTP are required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not otp:
+            return Response({"detail": "OTP are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.filter(email=email).first()
         if not user:

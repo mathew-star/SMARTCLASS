@@ -43,6 +43,7 @@ function Navbar() {
     logout();
     const { clearStore } = useClassStore.getState();
     clearStore();
+    
     navigate("/login");
   };
 

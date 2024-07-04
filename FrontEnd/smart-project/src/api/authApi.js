@@ -60,13 +60,13 @@ const authApi = {
   otprequest: async (values) =>{
     console.log( "otpreq");
     console.log(values)
-    const otprequest_response = await axiosInstance.post('/users/otp-request/',values)
+    const otprequest_response = await axios.post(`${API_BASE_URL}/users/otp-request/`,values)
     return otprequest_response.data
 
   },
 
   verifyOtp: async (values) => {
-      const otpVerifyResponse = await axiosInstance.post('/users/otp-verify/',values);
+      const otpVerifyResponse = await axios.post(`${API_BASE_URL}/users/otp-verify/`,values);
       console.log(otpVerifyResponse);
       return otpVerifyResponse.data;
   },
