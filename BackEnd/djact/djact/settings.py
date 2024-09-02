@@ -158,7 +158,7 @@ LOGGING = {
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgresql://mathew:p86CVBcLRWocQQqwgqSy47fwPFjmcnzW@dpg-cps6ueqj1k6c738iqdtg-a/smart_class_db')
+        default=os.environ.get('DATABASE_URL', 'postgresql://smartclassdb_user:jpzygBzlJQ9q17gZG5mnDm8ItG33Ux3Y@dpg-crb0a72j1k6c73clt5ng-a.oregon-postgres.render.com/smartclassdb')
     )
 }
 
